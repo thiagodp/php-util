@@ -11,7 +11,7 @@ require_once 'RTTI.php'; // Uses RTTI::getPrivateAttributes
  * JSON utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.0 
+ * @version	1.1 
  */
 class JSON {
 
@@ -27,7 +27,7 @@ class JSON {
 	static function encode( $data, $getterPrefixForObjectMethods = 'get' ) {
 		$type = gettype( $data );
 		switch ( $type ) {		
-			case 'string'	: return '"' . addslashes( $data ) . '"';
+			case 'string'	: return '"' . self::correct( $data ) . '"';
 			case 'number'	: // continue
 			case 'integer'	: // continue
 			case 'float'	: // continue			
@@ -43,7 +43,7 @@ class JSON {
 				$outputAssociative = array();
 				foreach ( $data as $key => $value ) {
 					$encodedValue = self::encode( $value );
-					$encodedPairKeyValue = self::encode( $key ) . ':' . $encodedValue;				
+					$encodedPairKeyValue = self::encode( $key ) . ' : ' . $encodedValue;				
 					$outputIndexed[] = $encodedValue;
 					$outputAssociative[] = $encodedPairKeyValue;
 					// If the key is not numbered, nullify the counter
@@ -52,12 +52,23 @@ class JSON {
 					}
 				}
 				if ( NULL == $indexCount ) { // NOT numbered key 
-					return '{' . implode( ',', $outputAssociative ) . '}';
+					return '{ ' . implode( ', ', $outputAssociative ) . ' }';
 				} else {
-					return '[' . implode( ',', $outputIndexed ) . ']';				
+					return '[ ' . implode( ', ', $outputIndexed ) . ' ]';				
 				}		
 			default			: return ''; // Not supported type
 		}
+	}
+	
+	/**
+	 * Corrects the string to be returned as JSON. This function is replacing addslashes that fails
+	 * in convert \' to '. The javascript fails if a \' is found in a JSON string.
+	 */
+	private static function correct( $str ) {
+		// I know that the parameters in str_replace could be an array but I think it is more
+		// readable to use this way.
+		$newStr = str_replace( '"', '\"', $str );
+		return str_replace( '\\\'', '\'', $newStr );
 	}
 
 }

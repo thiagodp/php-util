@@ -9,7 +9,7 @@
  * Load a class by its name.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.0
+ * @version	1.1
  */
 class ClassLoader {
 
@@ -62,7 +62,10 @@ class ClassLoader {
 		foreach( $this->levelDirs as $l ) {
 			foreach( $this->subDirs as $s ) {
 				foreach( $this->extensions as $e ) {
-					$path = $this->makePath( $l, $s, $className, $e );					
+					$path = $this->makePath( $l, $s, $className, $e );	
+					if ( $this->debugMode ) {
+						echo "Trying to load path: '$path'.<br />";
+					}
 					if ( file_exists( $path ) ) {						
 						// Add to cache
 						$this->cache[ "$className" ] = $path;
@@ -94,7 +97,7 @@ class ClassLoader {
 		if ( ! $this->debugMode || ! isset( $this->cache[ "$className" ] ) ) {
 			return;
 		}
-		$text = ( $wasCached ) ? 'CACHED PATH: ' : 'PATH: ';
+		$text = 'Found in ' . ( $wasCached ? 'CACHED PATH: ' : 'PATH: ' );
 		echo $text . $this->cache[ "$className" ] . '<br />';
 	}
 
@@ -108,8 +111,14 @@ class ClassLoader {
 	 * @return The path.
 	 */
 	private function makePath( $level, $subDir, $className, $extension ) {
-		$path = $level .'/'. $subDir .'/'. $className . $extension; 
-		$path = str_replace( '//', '/', $path ); 
+		$path = $className . $extension;
+		if ( ! empty( $subDir ) ) {
+			$path = $subDir .'/'. $path;
+		}
+		if ( ! empty( $level ) ) {
+			$path = $level .'/'. $path;
+		}
+		$path = str_replace( '\\', '/', $path ); 
 		return $path;
 	}
 	

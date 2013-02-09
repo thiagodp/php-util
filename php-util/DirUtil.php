@@ -9,7 +9,7 @@
  * Directory utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.0
+ * @version	1.1
  */
 class DirUtil {
 
@@ -20,7 +20,7 @@ class DirUtil {
 	 *	Start path to find. Defaul to '.' (current directory).
 	 * @return array with all the found directories.
 	 */
-	static function allSubDirs( $startPath = '.' ) {		
+	static function allSubDirs( $startPath = '.', $forceReverseBars = true ) {		
 		$iterator = new RecursiveIteratorIterator(
 			new RecursiveDirectoryIterator( $startPath ), 
 			RecursiveIteratorIterator::SELF_FIRST
@@ -28,7 +28,11 @@ class DirUtil {
 		$paths = array();
 		foreach ( $iterator as $file ) {
 			if ( $file->isDir() ) {
-				array_push( $paths, $file->getRealpath() );
+				$path = $file->getRealpath();
+				if ( $forceReverseBars ) {
+					$path = str_replace( '\\', '/', $path );
+				}
+				array_push( $paths, $path );
 			}
 		}
 		return $paths;
