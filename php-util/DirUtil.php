@@ -20,11 +20,10 @@ class DirUtil {
 	/**
 	 * Returns all the subdirectories from a start path.
 	 *
-	 * @param string startPath
-	 *	Start path to find. Defaul to '.' (current directory).
-	 * @return array with all the found directories.
+	 * @param startPath	a string with the start path (defaults to current directory).
+	 * @return			an array with all the found directories.
 	 */
-	static function allSubDirs( $startPath = '.', $forceReverseBars = true ) {		
+	static function allSubDirs( $startPath = '.' ) {		
 		$iterator = new RecursiveIteratorIterator(
 			new RecursiveDirectoryIterator( $startPath ), 
 			RecursiveIteratorIterator::SELF_FIRST
@@ -32,10 +31,7 @@ class DirUtil {
 		$paths = array();
 		foreach ( $iterator as $file ) {
 			if ( $file->isDir() ) {
-				$path = $file->getRealpath();
-				if ( $forceReverseBars ) {
-					$path = str_replace( '\\', '/', $path );
-				}
+				$path = str_replace( '\\', '/', $file->getRealpath() );				
 				array_push( $paths, $path );
 			}
 		}
