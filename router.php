@@ -39,7 +39,7 @@
  * <h2>HOW TO USE IT</h2>
  * <p>
  *		Put this file at your (root) source folder. Call it from your HTML passing the expected
- *		POST parameters (currently _c and _m).
+ *		REQUEST parameters (currently _c and _m).
  * </p>
  *
  *
