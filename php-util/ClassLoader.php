@@ -26,15 +26,14 @@ class ClassLoader {
 	/**
 	 * Allows to specify the directories and extensions where to find classes' files.
 	 *
-	 * @param array levelDirs
-	 *	Levels where to find the files. Default to array( '.', '..' ).
-	 * @param array levelDirs
-	 *	Sub dirs where to find the files.
-	 * @param array extensions
-	 *	Extensions to find. Default to array( '.php' ).
+	 * @param levelDirs		an array with the levels where to find the files (defaults to the
+	 * 						current directory).
+	 * @param subDirs		an array with the subdirectories where to find the files. Hint: use
+	 *						DirUtil::allSubDirs() to get all the subdirectories from a path.
+	 * @param extensions	an array with the file extensions to find (defaults to '.php').
 	 */
 	function __construct(
-		array $levelDirs = array( '.', '..' ),
+		array $levelDirs = array( '.' ),
 		array $subDirs = array(),
 		array $extensions = array( '.php' )	
 		) {
@@ -45,15 +44,17 @@ class ClassLoader {
 		
 	/**
 	 * Tries to load a class with a given name.
-	 *
+	 * <p>
 	 * IMPORTANT:
-	 *  - The name of the class and its file should be the same.
-	 * 	- Uses <code>require_once</code> to include the files.
-	 *  - All the found class paths are cached to faster the loading on future calls.
+	 * <ul>
+	 *		<li>The name of the class and its file should be the same.</li>
+	 * 		<li>Uses <code>require_once</code> to include the files.</li>
+	 *  	<li>All the found class paths are cached to faster the loading on future calls.</li>
+	 * </ul>
+	 * </p>
 	 *
-	 * @param string className
-	 * 					Class name.
-	 * @return true if the class is loaded.
+	 * @param className	the class name.
+	 * @return			true if the class is loaded, false otherwise.
 	 */
 	function load( $className ) {	
 		// Check if it is in the cache
