@@ -13,26 +13,26 @@
  * Run time type information utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.0
+ * @version	1.1
  */
 class RTTI {
 
 	/**
-	 * Get private attribute names and their values (by calling the public methods started
-	 * with <code>$getterPrefix</code>).  
+	 * Get private attribute names and their values as a map.
 	 * 
-	 * @param unknown_type $obj
-	 * 		Object of any class 
-	 * @param string $getterPrefix
-	 * 		The prefix for getter methods (default is 'get').
-	 * @return array of attributes
+	 * @param obj			the object to get the private attributes.
+	 * @param getterPrefix	the getter prefix used to get the values (defaults to 'get').
+	 * @param useCamelCase	if uses camel case in method name (default to true).
+	 * @return				an map with the found attribute names and their values.
 	 */
-	static function getPrivateAttributes( $obj, $getterPrefix = 'get' ) {
+	static function getPrivateAttributes( $obj, $getterPrefix = 'get', $useCamelCase = true ) {
 		$attributes = array();
-		$reflecionObject = new ReflectionObject( $obj );
-		foreach ( $reflecionObject->getProperties( ReflectionProperty::IS_PRIVATE ) as $property ) {
-			$attributes[ $property->getName() ] = $reflecionObject->getMethod(
-					$getterPrefix . ucfirst( $property->getName() ) )->invoke( $obj );
+		$reflectionObject = new ReflectionObject( $obj );
+		$properties = $reflectionObject->getProperties( ReflectionProperty::IS_PRIVATE );
+		foreach ( $properties as $p ) {
+			$attributeName = $p->getName();
+			$methodName = $getterPrefix . ( $useCamelCase ? ucfirst( $attributeName ) : $attributeName );
+			$attributes[ $attributeName ] = $reflectionObject->getMethod( $methodName )->invoke( $obj );
 		}
 		return $attributes;
 	}
