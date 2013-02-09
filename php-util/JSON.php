@@ -22,11 +22,10 @@ class JSON {
 	/**
 	 * Encodes a data to JSON format.
 	 * 
-	 * @param unknown_type $data
-	 * 		The data to be encoded.
-	 * @param string $getterPrefixForObjectMethods
-	 * 		The prefix for getter methods (default is 'get'). Ignore it for non object data.
-	 * @return JSON encoded output
+	 * @param data							the data to be serialized as JSON.
+	 * @param getterPrefixForObjectMethods	the prefix for getter methods (defaults to 'get').
+	 *										Ignore it for non object data.
+	 * @return								a string in JSON format.
 	 */
 	static function encode( $data, $getterPrefixForObjectMethods = 'get' ) {
 		$type = gettype( $data );
@@ -67,6 +66,9 @@ class JSON {
 	/**
 	 * Corrects the string to be returned as JSON. This function is replacing addslashes that fails
 	 * in convert \' to '. The javascript fails if a \' is found in a JSON string.
+	 *
+	 * @param str	the string to be corrected.
+	 * @return		a corrected string.
 	 */
 	private static function correct( $str ) {
 		// I know that the parameters in str_replace could be an array but I think it is more
