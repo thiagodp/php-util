@@ -28,12 +28,12 @@
  *						+ ' Data: ' + ( response.data ? response.data : '' )
  *						);
  * 					}
- *				$.post( 'router.php', data, showResponse, 'json' );
+ *				$.post( 'invoker.php', data, showResponse, 'json' );
  *			</script>
  *		</body> 
  * 		</html>
  * </code>
- * This will make router.php to create a SomeClass instance and call its someMethod method.<br />
+ * This will make invoker.php to create a SomeClass instance and call its someMethod method.<br />
  * The method return will be send back to the client (as JSON) in the "data" field.
  * </p>
  * <h2>HOW TO USE IT</h2>
