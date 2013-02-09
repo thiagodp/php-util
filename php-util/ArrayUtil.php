@@ -20,12 +20,9 @@ class ArrayUtil {
 	/**
 	 * Check for non existing keys in an array.
 	 * 
-	 * @param array keys
-	 * 					Array of keys to check in the target array.
-	 * @param array targetArray
-	 * 					The target array.
-	 * @return array
-	 * 					An array with the keys not found.
+	 * @param keys			an array with the keys to check in the target array.
+	 * @param targetArray	the target array.
+	 * @return				an array with the keys not found.
 	 */
 	static function nonExistingKeys( array $keys, array $targetArray ) {
 		$notFound = array();
