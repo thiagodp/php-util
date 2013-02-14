@@ -30,9 +30,8 @@ class RTTI {
 			return array();
 		}
 		$attributes = array();
-		$reflectionObject = new ReflectionObject( $obj );		
-		$className = get_class( $obj );
-		$currentClass = new ReflectionClass( $className );
+		$reflectionObject = new ReflectionObject( $obj );
+		$currentClass = new ReflectionClass( get_class( $obj ) );
 		while ( $currentClass !== false && ! $currentClass->isInterface() ) {					
 			$properties = $currentClass->getProperties( ReflectionProperty::IS_PRIVATE );
 			foreach ( $properties as $property ) {
