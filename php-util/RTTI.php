@@ -13,7 +13,7 @@
  * Run time type information utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.1
+ * @version	1.2
  */
 class RTTI {
 
@@ -26,15 +26,28 @@ class RTTI {
 	 * @return				an map with the found attribute names and their values.
 	 */
 	static function getPrivateAttributes( $obj, $getterPrefix = 'get', $useCamelCase = true ) {
-		$attributes = array();
-		$reflectionObject = new ReflectionObject( $obj );
-		$properties = $reflectionObject->getProperties( ReflectionProperty::IS_PRIVATE );
-		foreach ( $properties as $p ) {
-			$attributeName = $p->getName();
-			$methodName = $getterPrefix . ( $useCamelCase ? ucfirst( $attributeName ) : $attributeName );
-			$attributes[ $attributeName ] = $reflectionObject->getMethod( $methodName )->invoke( $obj );
+		if ( ! isset( $obj ) ) {
+			return array();
 		}
-		return $attributes;
+		$attributes = array();
+		$reflectionObject = new ReflectionObject( $obj );		
+		$className = get_class( $obj );
+		$currentClass = new ReflectionClass( $className );
+		while ( $currentClass !== false && ! $currentClass->isInterface() ) {					
+			$properties = $currentClass->getProperties( ReflectionProperty::IS_PRIVATE );
+			foreach ( $properties as $property ) {
+				$attributeName = $property->getName();
+				$methodName = $getterPrefix . ( $useCamelCase ? ucfirst( $attributeName ) : $attributeName );
+				if ( $reflectionObject->hasMethod( $methodName ) ) {
+					$method = $reflectionObject->getMethod( $methodName );
+					if ( $method->isPublic() ) {
+						$attributes[ $attributeName ] = $method->invoke( $obj );
+					}
+				}
+			}
+			$currentClass = $currentClass->getParentClass();
+		}
+		return $attributes;		
 	}
 
 }
