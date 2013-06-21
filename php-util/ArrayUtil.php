@@ -33,6 +33,30 @@ class ArrayUtil {
 		}
 		return $notFound;
 	}
-}
 
+	/**
+	 * Removes an item from an array.
+	 *
+	 * @param array array				the array with the item.
+	 * @param unknown_type item			the item to remove.
+	 * @param boolean reindexArray		option to reindex the array after removing. Default is true.
+	 * @param boolean compareItemTypes	option to compare the items with === instead of ==. Default is false.
+	 * @return							true if removed, false otherwise.
+	 */
+	static function removeItem( array &$array, $item, $reindexArray = true, $compareItemTypes = false ) {
+		if ( ! isset( $array ) || ! isset( $item ) ) {
+			return false;
+		}
+		$key = array_search( $item, $array, $compareItemTypes );
+		if ( false === $key ) {
+			return false;
+		}
+		unset( $array[ $key ] );
+		if ( $reindexArray ) {
+			$array = array_values( $array );
+		}
+		return true;
+	}
+
+}
 ?>
