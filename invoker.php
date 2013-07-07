@@ -38,8 +38,7 @@
  * </p>
  * <h2>HOW TO USE IT</h2>
  * <p>
- *		Put this file at your (root) source folder. Call it from your HTML passing the expected
- *		REQUEST parameters (currently _c and _m).
+ * Call it from your HTML file passing the expected REQUEST parameters (currently _c and _m).
  * </p>
  *
  *
@@ -50,7 +49,8 @@
  *
  */
 
-require_once( 'autoload.php' );	// Uses __autoload
+require_once( 'JSON.php' );
+require_once( 'Response.php' );
 
 define( 'CLASS_PARAMETER', '_c' );
 define( 'METHOD_PARAMETER', '_m' );
