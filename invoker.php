@@ -51,9 +51,11 @@
 
 require_once( 'JSON.php' );
 require_once( 'Response.php' );
+require_once( '../autoload.php' );
 
 define( 'CLASS_PARAMETER', '_c' );
 define( 'METHOD_PARAMETER', '_m' );
+define( 'RAW_PARAMETER', '_raw' );
 
 function _error( $msg ) {
 	die( JSON::encode( new Response( false, $msg ) ) );
@@ -81,7 +83,11 @@ if ( ! method_exists( $obj, $methodName ) ) {
 // Calls the defined method, get its result and send to the client
 try {
 	$data = call_user_func( array( $obj, $methodName ) );
-	die( JSON::encode( new Response( true, '', $data ) ) );
+	if ( isset( $_REQUEST[ RAW_PARAMETER ] ) ) {
+		die( JSON::encode( $data ) );
+	} else {
+		die( JSON::encode( new Response( true, '', $data ) ) );
+	}
 } catch (Exception $e) {
 	_error( $e->getMessage() );
 }
