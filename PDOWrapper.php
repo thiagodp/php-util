@@ -6,7 +6,7 @@
  * @see PDO
  * 
  * @author	Thiago Delgado Pinto
- * @version	0.1
+ * @version	0.2
  */
 class PDOWrapper {
 
@@ -47,9 +47,9 @@ class PDOWrapper {
 	/**
 	 * Generate an ID for a table based on its MAX value.
 	 *
-	 * @param tableName		The name of the table.
-	 * @param idFieldName	The name of the id field.
-	 * @return				The next id value or 1 if there are no records.
+	 * @param tableName		the name of the table.
+	 * @param idFieldName	the name of the id field.
+	 * @return				the next id value or 1 if there are no records.
 	 */
 	function generateId( $tableName, $idFieldName = 'id' ) { // throws
 		$maxColumn = 'M_A_X_';
@@ -64,10 +64,10 @@ class PDOWrapper {
 	/**
 	 * Delete a record by its id.
 	 *
-	 * @param id			The id value.
-	 * @param tableName		The name of the table.
-	 * @param idFieldName	The name of the id field.
-	 * @return				The number of deleted records.
+	 * @param id			the id value.
+	 * @param tableName		the name of the table.
+	 * @param idFieldName	the name of the id field.
+	 * @return				the number of deleted records.
 	 */
 	function deleteWithId( $id, $tableName, $idFieldName = 'id' ) { // throws
 		$cmd = "delete from $tableName where $idFieldName = ?";
@@ -187,6 +187,39 @@ class PDOWrapper {
 			array_push( $objects, $obj );
 		}
 		return $objects;
+	}
+	
+	/**
+	 * Return an object with the given id or null if not found.
+	 *
+	 * @param recordToObjectCallback	the callback to transform a record into an object.
+	 * @param id						the id value.
+	 * @param tableName					the table name.
+	 * @param idFieldName				the name of the id field.
+	 * @return							the object with the given id or null if not found.
+	 */
+	function objectWithId( $recordToObjectCallback, $id, $tableName, $idFieldName = 'id' ) {
+		$cmd = "SELECT * FROM $tableName WHERE $idFieldName = ?";
+		$params = array( $id );
+		$objects = $this->queryObjects( $recordToObjectCallback, $cmd, $params );
+		if ( count( $objects ) > 0 ) {
+			return $objects[ 0 ];
+		}
+		return null;
+	}
+	
+	/**
+	 * Return all the records as objects.
+	 *
+	 * @param recordToObjectCallback	the callback to transform a record into an object.
+	 * @param tableName					the table name.
+	 * @param limit						the maximum number of records to retrieve.
+	 * @param offset					the number of records to ignore (or "jump").
+	 * @return							an array of objects.
+	 */
+	function allObjects( $recordToObjectCallback, $tableName, $limit = 0, $offset = 0 ) {
+		$cmd = "SELECT * FROM $tableName" . $this->makeOffset( $limit, $offset );
+		return $this->queryObjects( $recordToObjectCallback, $cmd );
 	}
 	
 	/**
