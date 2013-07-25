@@ -13,33 +13,38 @@
  * Load a class by its name.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.1
+ * @version	2.0
  */
 class ClassLoader {
-
-	private $debugMode = false;
-	private $cache = array();
-	private $levelDirs = array();
-	private $subDirs = array();
-	private $extensions = array();
+	
+	private $extensions;
+	private $cachedFiles;
+	private $debugMode;
 	
 	/**
 	 * Allows to specify the directories and extensions where to find classes' files.
 	 *
-	 * @param levelDirs		an array with the levels where to find the files (defaults to the
-	 * 						current directory).
-	 * @param subDirs		an array with the subdirectories where to find the files. Hint: use
-	 *						DirUtil::allSubDirs() to get all the subdirectories from a path.
+	 * @param dirs			an array with the bdirectories where to find the files.
+	 * 						Hint: use DirUtil::allSubDirs() to get the subdirectories from a path.
 	 * @param extensions	an array with the file extensions to find (defaults to '.php').
+	 *						OPTIONAL default array( '.php' ).
+	 * @param debugMode		true for printing debugging messages. OPTIONAL default false.
 	 */
 	function __construct(
-		array $levelDirs = array( '.' ),
-		array $subDirs = array(),
-		array $extensions = array( '.php' )	
-		) {
-		$this->levelDirs = $levelDirs;
-		$this->subDirs = $subDirs;
-		$this->extensions = $extensions;
+		array $dirs,
+		array $extensions = array( '.php' ),
+		$debugMode = false
+		) {		
+		$this->dirs = $dirs;
+		$this->extensions = count( $extensions ) > 0 ? $extensions : array( '.php' );
+		$this->debugMode = $debugMode;
+	}
+	
+	function getDebugMode() { return $this->debugMode; }	
+	function setDebugMode( $debugMode ) { $this->debugMode = $debugMode; }	
+	
+	private function joinDirs( $d1, $d2 ) {
+		return str_replace( array( '\\', '\\\\' ), '/', $d1 . $d2 );
 	}
 		
 	/**
@@ -58,75 +63,25 @@ class ClassLoader {
 	 */
 	function load( $className ) {	
 		// Check if it is in the cache
-		if ( isset( $this->cache[ "$className" ] ) ) {
-			$this->printCache( $className, true );
-			require_once( $this->cache[ "$className" ] );
+		if ( isset( $this->cachedFiles[ "$className" ] ) ) {
+			if ( $this->debugMode ) echo 'Found in cache: ', $this->cachedFiles[ "$className" ], '<br />';
+			require_once( $this->cachedFiles[ "$className" ] );
 			return true;
+		}		
+		foreach ( $this->dirs as $dir ) {
+			if ( $this->debugMode ) echo 'Dir ', $dir, '<br />';
+			foreach ( $this->extensions as $ext ) {
+				$path = $dir . '/'. $className . $ext;				
+				if ( $this->debugMode ) echo "PATH: '$path'.<br />";	
+				if ( file_exists( $path ) ) {										
+					$this->cachedFiles[ "$className" ] = $path; // Add to cache
+					if ( $this->debugMode ) echo 'FOUND. Added to cache: ', $this->cachedFiles[ "$className" ], '<br />';				
+					require_once( $path ); // Load library
+					return true;
+				}
+			}
 		}
-		// Search
-		foreach( $this->levelDirs as $l ) {
-			foreach( $this->subDirs as $s ) {
-				foreach( $this->extensions as $e ) {
-					$path = $this->makePath( $l, $s, $className, $e );	
-					if ( $this->debugMode ) {
-						echo "Trying to load path: '$path'.<br />";
-					}
-					if ( file_exists( $path ) ) {						
-						// Add to cache
-						$this->cache[ "$className" ] = $path;
-						// Print cache
-						$this->printCache( $className, false );
-						// Load library
-						require_once( $path );
-						return true;
-					} // if
-				} // foreach
-			} // foreach
-		} // foreach
 		return false;
-	}
-	
-	
-	function getDebugMode() {
-		return $this->debugMode;
-	}
-	
-	function setDebugMode( $debugMode ) {
-		$this->debugMode = $debugMode;
-	}
-	
-	/**
-	 * Print the cache content if it is in debug mode.
-	 */
-	private function printCache( $className, $wasCached = false ) {
-		if ( ! $this->debugMode || ! isset( $this->cache[ "$className" ] ) ) {
-			return;
-		}
-		$text = 'Found in ' . ( $wasCached ? 'CACHED PATH: ' : 'PATH: ' );
-		echo $text . $this->cache[ "$className" ] . '<br />';
-	}
-
-	/**
-	 * Make a path.
-	 *
-	 * @param string level Directory level.
-	 * @param string subdir Subdirectory.
-	 * @param string className Class name.
-	 * @param string extension Extension.
-	 * @return The path.
-	 */
-	private function makePath( $level, $subDir, $className, $extension ) {
-		$path = $className . $extension;
-		if ( ! empty( $subDir ) ) {
-			$path = $subDir .'/'. $path;
-		}
-		if ( ! empty( $level ) ) {
-			$path = $level .'/'. $path;
-		}
-		$path = str_replace( '\\', '/', $path ); 
-		return $path;
-	}
-	
+	}	
 }
-
 ?>
