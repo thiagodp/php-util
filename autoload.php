@@ -35,6 +35,7 @@
  * @see		{@link ClassLoader} {@link DirUtil}
  */
  
+// IMPORTANT: autoload.php should be put in a folder a level up from php-util.
 require_once( 'php-util/ClassLoader.php' );	// Uses ClassLoader::load
 require_once( 'php-util/DirUtil.php' );		// Uses DirUtil::allSubDirs
 
@@ -44,14 +45,10 @@ require_once( 'php-util/DirUtil.php' );		// Uses DirUtil::allSubDirs
  * @param className	the class name to be loaded.
  */
 function __autoload( $className ) {
-	//echo 'class name is '. $className . '<br />';
 	static $classLoader = null;
 	if ( ! isset( $classLoader ) ) {	
-		$levelDirs = array( '' ); // not needed
 		$subDirs = DirUtil::allSubDirs( '.' );
-		$extensions = array( '.php', '.class.php' );	
-		$classLoader = new ClassLoader( $levelDirs, $subDirs, $extensions );
-		//$classLoader->setDebugMode( true );
+		$classLoader = new ClassLoader( $subDirs );
 	}
 	$classLoader->load( $className );
 }
