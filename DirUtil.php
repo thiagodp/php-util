@@ -13,7 +13,7 @@
  * Directory utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.1
+ * @version	1.2
  */
 class DirUtil {
 
@@ -31,7 +31,11 @@ class DirUtil {
 		$paths = array();
 		foreach ( $iterator as $file ) {
 			if ( $file->isDir() ) {
-				$path = str_replace( '\\', '/', $file->getRealpath() );				
+				$path = str_replace( '\\', '/', $file->getRealpath() );
+				// Don't allow duplicate
+				if ( array_search( $path, $paths ) !== false ) {
+					continue;
+				}
 				array_push( $paths, $path );
 			}
 		}
@@ -39,5 +43,4 @@ class DirUtil {
 	}
 
 }
-
 ?>
