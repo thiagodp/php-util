@@ -1,10 +1,11 @@
 <?php
+FileUtil::preventDirectAccessToTheCurrentFile( 'http://localhost' );
 
 /**
  * Useful file-related methods.
  *
  * @author	Thiago Delgado Pinto
- * @version	0.1
+ * @version	0.2
  */
 class FileUtil {
 
@@ -22,6 +23,23 @@ class FileUtil {
         else if ( $bytes == 1 ) return $bytes . ' byte';
 		return '0 bytes';
 	}
+	
+	/**
+	 * Prevent the direct access to the current file, redirecting the user to another page.
+	 *
+	 * @param urlToRedirect	the url used to redirect the user.
+	 */
+	static function preventDirectAccessToTheCurrentFile( $urlToRedirect ) {
+		$whereTheFileIs	= basename( $_SERVER[ 'PHP_SELF' ] );
+		$whereTheFileWasCalled = basename( __FILE__ );
+		if ( $whereTheFileIs === $whereTheFileWasCalled ) {
+			// Prevent loop
+			if ( $urlToRedirect === $whereTheFileIs ) {
+				die( 'You have tried to redirect to the same URL.' );
+			}
+			header( "Location: $urlToRedirect" );
+			die();
+		}
+	}	
 }
-
 ?>
