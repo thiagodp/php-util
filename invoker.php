@@ -43,7 +43,7 @@
  *
  *
  * @author	Thiago Delgado Pinto
- * @version	1.0
+ * @version	1.1
  *
  * @see		{@link JSON}, {@link Response}
  *
@@ -58,6 +58,7 @@ define( 'METHOD_PARAMETER', '_m' );
 define( 'RAW_PARAMETER', '_raw' );
 
 function _error( $msg ) {
+	header( 'Content-type: text/json' );
 	die( JSON::encode( new Response( false, $msg ) ) );
 }
 
@@ -83,6 +84,7 @@ if ( ! method_exists( $obj, $methodName ) ) {
 // Calls the defined method, get its result and send to the client
 try {
 	$data = call_user_func( array( $obj, $methodName ) );
+	header( 'Content-type: text/json' );
 	if ( isset( $_REQUEST[ RAW_PARAMETER ] ) ) {
 		die( JSON::encode( $data ) );
 	} else {
