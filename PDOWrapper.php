@@ -227,7 +227,7 @@ class PDOWrapper {
 	 * @return							an array of objects.
 	 */
 	function allObjects( $recordToObjectCallback, $tableName, $limit = 0, $offset = 0 ) {
-		$cmd = "SELECT * FROM $tableName" . $this->makeOffset( $limit, $offset );
+		$cmd = "SELECT * FROM $tableName" . $this->makeLimitOffset( $limit, $offset );
 		return $this->queryObjects( $recordToObjectCallback, $cmd );
 	}
 	
