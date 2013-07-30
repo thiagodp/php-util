@@ -33,24 +33,22 @@ interface EntityFinder {
 	function withId( $id );
 	
 	/**
-	 * Return an array of entities with the supplied filters.
-	 *
-	 * @param filters	the array of filters with information to find the entities.
-	 * @param exactly	true for an extact search, false otherwise.
-	 * @param limit		the maximum number of entities to retrieve. OPTIONAL.
-	 * @param offset	the number of entities to ignore. OPTIONAL.
-	 * @return			an array with the found entities.
-	 */	
-	function with( array $filters, $exactly = false, $limit = 0, $offset = 0 );
-	
-	/**
 	 * Return all the entities.
 	 *
 	 * @param limit		the maximum number of entities to retrieve. OPTIONAL.
 	 * @param offset	the number of entities to ignore. OPTIONAL.
+	 * @param orders	the array with the keys as columns and values as the order for sorting.
+	 *					OPTIONAL. Example: array( 'email' => 'asc' ) to sort by 'email' ascending.
+	 * @param filters	the array with the keys as columns and values for filtering. OPTIONAL.
+	 *					Example: array( 'email' => 'myemail@site.com' ) to filter by 'email'. 
+	 * @param exactly	true for an exact search in the filter, false otherwise.
 	 * @return			an array with the entities.	
 	 */
-	function all( $limit = 0, $offset = 0 );
+	function all( $limit = 0, $offset = 0,
+		array $orders = array(),
+		array $filters = array(),
+		$exactly = false
+		);
 }
 
 ?>

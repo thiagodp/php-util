@@ -155,9 +155,11 @@ class PDOWrapper {
 			if (   $this->isMySQL( $drv )
 				|| $this->isPostgreSQL( $drv ) 
 				|| $this->isSQLite( $drv )
-				) $sql .= " OFFSET $offset ";
+				) {
+				if ( $limit > 0 ) $sql .= " OFFSET $offset ";
+				else $sql .= " LIMIT 9999999999999 OFFSET $offset "; // OFFSET needs a LIMIT
 			// Firebird
-			else if ( $this->isFirebird ) $sql .= " SKIP $offset ";
+			} else if ( $this->isFirebird ) $sql .= " SKIP $offset ";
 			// IBM DB2, ANSI-SQL 2008
 			else $sql .= " OFFSET $offset ROWS ";
 		}
