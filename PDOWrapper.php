@@ -136,7 +136,7 @@ class PDOWrapper {
 		$sql = '';
 		$drv = $this->driverName();
 		// Limit clause
-		if ( $limit >= 0 ) {
+		if ( $limit > 0 ) {
 			// MySQL, PostgreSQL, SQLite, HSQLDB, H2
 			if (   $this->isMySQL( $drv )
 				|| $this->isPostgreSQL( $drv )
@@ -150,7 +150,7 @@ class PDOWrapper {
 			else $sql .= " FETCH FIRST $limit ROWS ONLY ";
 		}
 		// Offset clause		
-		if ( $offset >= 0 ) {
+		if ( $offset > 0 ) {
 			// MySQL, PostgreSQL, SQLite, HSQLDB, H2
 			if (   $this->isMySQL( $drv )
 				|| $this->isPostgreSQL( $drv ) 
