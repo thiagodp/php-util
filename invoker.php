@@ -19,16 +19,26 @@
  * <code>
  *		<html>
  *		<body>
- * 			<script type='text/javascript' src='jquery.js' ></script>
- *			<script type='text/javascript' >
+ * 			<script type='text/javascript' charset='UTF-8' src='jquery.js' ></script>
+ *			<script type='text/javascript' charset='UTF-8' >
+ *				// Example 1
  *				var data = { _c : 'SomeClass', _m : 'someMethod' };
- *				var showResponse = function( response ) {
- *					alert( 'Success: ' + response.success
- *						+ ' Message: ' + response.message
- *						+ ' Data: ' + ( response.data ? response.data : '' )
- *						);
- * 					}
- *				$.post( 'invoker.php', data, showResponse, 'json' );
+ *				var responseFn = function( response ) {
+ *					console.log( response ); // See Response.php
+ * 				};
+ *				$.post( 'invoker.php', data, responseFn, 'json' );
+ *
+ *				// Example 2 
+ *				$( '#saveButton' ).click( function() {
+ *					var formData = $( '#aForm' ).serializeArray();
+ *					formData[ formData.length ] = { name: '_c', value: 'AnotherClass' };
+ *					formData[ formData.length ] = { name: '_m', value: 'anotherMethod' }; 
+ *					var formResponseFn = function( response ) {
+ *						alert( response.success ? 'Saved.' : response.message );
+ *					};
+ *					$.post( 'invoker.php', formData, formResponseFn, 'json' );
+ *				}; // click
+ *				
  *			</script>
  *		</body> 
  * 		</html>
@@ -43,22 +53,21 @@
  *
  *
  * @author	Thiago Delgado Pinto
- * @version	1.1
+ * @version	1.1.1
  *
  * @see		{@link JSON}, {@link Response}
  *
  */
+require_once( 'autoload.php' );
 
-require_once( 'JSON.php' );
-require_once( 'Response.php' );
-require_once( '../autoload.php' );
+mb_internal_encoding( 'UTF-8' );
+header( 'Content-type: text/json; charset=UTF-8' );
 
 define( 'CLASS_PARAMETER', '_c' );
 define( 'METHOD_PARAMETER', '_m' );
 define( 'RAW_PARAMETER', '_raw' );
 
-function _error( $msg ) {
-	header( 'Content-type: text/json' );
+function _error( $msg ) {	
 	die( JSON::encode( new Response( false, $msg ) ) );
 }
 
@@ -84,7 +93,6 @@ if ( ! method_exists( $obj, $methodName ) ) {
 // Calls the defined method, get its result and send to the client
 try {
 	$data = call_user_func( array( $obj, $methodName ) );
-	header( 'Content-type: text/json' );
 	if ( isset( $_REQUEST[ RAW_PARAMETER ] ) ) {
 		die( JSON::encode( $data ) );
 	} else {
