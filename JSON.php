@@ -15,12 +15,12 @@ require_once 'RTTI.php'; // Uses RTTI::getPrivateAttributes
  * JSON utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.1 
+ * @version	1.2
  */
 class JSON {
 
 	/**
-	 * Encodes a data to JSON format.
+	 * Encode a data to JSON format.
 	 * 
 	 * @param data							the data to be serialized as JSON.
 	 * @param getterPrefixForObjectMethods	the prefix for getter methods (defaults to 'get').
@@ -45,8 +45,9 @@ class JSON {
 				$outputIndexed = array();
 				$outputAssociative = array();
 				foreach ( $data as $key => $value ) {
-					$encodedValue = self::encode( $value );
-					$encodedPairKeyValue = self::encode( $key ) . ' : ' . $encodedValue;				
+					$encodedValue = self::encode( $value, $getterPrefixForObjectMethods );
+					$encodedPairKeyValue = self::encode( $key, $getterPrefixForObjectMethods )
+						. ' : ' . $encodedValue;				
 					$outputIndexed[] = $encodedValue;
 					$outputAssociative[] = $encodedPairKeyValue;
 					// If the key is not numbered, nullify the counter
@@ -64,7 +65,7 @@ class JSON {
 	}
 	
 	/**
-	 * Corrects the string to be returned as JSON. This function is replacing addslashes that fails
+	 * Correct the string to be returned as JSON. This function is replacing addslashes that fails
 	 * in convert \' to '. The javascript fails if a \' is found in a JSON string.
 	 *
 	 * @param str	the string to be corrected.
