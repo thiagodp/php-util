@@ -30,11 +30,6 @@ class ParamUtil {
 	static function request( $key, $useTrim = true, $encodeAll = false ) {
 		return self::value( $_REQUEST, $key, $encodeAll );
 	}
-	
-	/// Same as {@code request}.
-	static function param( $name, $useTrim = true, $encodeAll = false ) {
-		return self::request( $name, $useTrim, $encodeAll );
-	}
 
 	/**
 	 * Returns a value from an array using some options.
