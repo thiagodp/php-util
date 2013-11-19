@@ -12,7 +12,7 @@ class ParamUtil {
 	 * @see {@code value()}.
 	 */
 	static function get( $key, $useTrim = true, $encodeAll = false ) {
-		return self::value( $_GET, $key, $encodeAll );
+		return self::value( $_GET, $key, $useTrim, $encodeAll );
 	}
 
 	/**
@@ -20,7 +20,7 @@ class ParamUtil {
 	 * @see {@code value()}.
 	 */
 	static function post( $key, $useTrim = true, $encodeAll = false ) {
-		return self::value( $_POST, $key, $encodeAll );
+		return self::value( $_POST, $key, $useTrim, $encodeAll );
 	}
 	
 	/**
@@ -28,7 +28,7 @@ class ParamUtil {
 	 * @see {@code value()}.
 	 */	
 	static function request( $key, $useTrim = true, $encodeAll = false ) {
-		return self::value( $_REQUEST, $key, $encodeAll );
+		return self::value( $_REQUEST, $key, $useTrim, $encodeAll );
 	}
 
 	/**
