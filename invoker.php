@@ -53,7 +53,7 @@
  *
  *
  * @author	Thiago Delgado Pinto
- * @version	1.1.1
+ * @version	1.1.2
  *
  * @see		{@link JSON}, {@link Response}
  *
@@ -85,13 +85,13 @@ $methodName = htmlentities( $targetArray[ METHOD_PARAMETER ] );
 if ( ! class_exists( $className, true ) ) {
 	_error( "Class '${className}' not found." );
 }
-// Verifies if the method exists in the class instance
-$obj = new $className;
-if ( ! method_exists( $obj, $methodName ) ) {
-	_error( "Method '${methodName}' not found in class '${className}'." );
-}
 // Calls the defined method, get its result and send to the client
 try {
+	// Verifies if the method exists in the class instance
+	$obj = new $className;
+	if ( ! method_exists( $obj, $methodName ) ) {
+		_error( "Method '${methodName}' not found in class '${className}'." );
+	}
 	$data = call_user_func( array( $obj, $methodName ) );
 	if ( isset( $_REQUEST[ RAW_PARAMETER ] ) ) {
 		die( JSON::encode( $data ) );
