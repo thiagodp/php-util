@@ -53,7 +53,7 @@
  *
  *
  * @author	Thiago Delgado Pinto
- * @version	1.1.2
+ * @version	1.1.3
  *
  * @see		{@link JSON}, {@link Response}
  *
@@ -79,8 +79,8 @@ foreach ( $params as $p ) {
 		_error( "Parameter '$p' not sent." );
 	}
 }
-$className = htmlentities( $targetArray[ CLASS_PARAMETER ] );
-$methodName = htmlentities( $targetArray[ METHOD_PARAMETER ] );
+$className = htmlentities( $targetArray[ CLASS_PARAMETER ], ENT_QUOTES, 'UTF-8' );
+$methodName = htmlentities( $targetArray[ METHOD_PARAMETER ], ENT_QUOTES, 'UTF-8' );
 // Uses the __autoload to search for the class file and include it
 if ( ! class_exists( $className, true ) ) {
 	_error( "Class '${className}' not found." );
