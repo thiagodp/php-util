@@ -266,7 +266,7 @@ class PDOWrapper {
 	 */	
 	function execute( $command, array $parameters = array() ) { // throws
 		$ps = $this->pdo->prepare( $command );
-		if ( ! $ps->execute( $parameters ) ) {
+		if ( ! $ps || ! $ps->execute( $parameters ) ) {
 			throw new DatabaseException( 'SQL error: ' . $command );
 		}
 		return $ps;
