@@ -34,7 +34,7 @@ class PDOWrapper {
 	 *
 	 * @see http://www.php.net/manual/en/pdo.connections.php
 	 */
-	static function create( $dsn, $username, $password, $options = array() ) { // throw
+	static function create( $dsn, $username = '', $password = '', $options = array() ) { // throw
 		// Cache the connection and reuse it
 		if ( ! isset( $options[ PDO::ATTR_PERSISTENT ] ) ) {
 			$options[ PDO::ATTR_PERSISTENT ] = true;
@@ -47,7 +47,7 @@ class PDOWrapper {
 	 *
 	 * @see http://www.php.net/manual/en/pdo.connections.php
 	 */
-	static function createInModeException( $dsn, $username, $password, $options = array() ) { // throw
+	static function createInModeException( $dsn, $username = '', $password = '', $options = array() ) { // throw
 		$pdo = self::create( $dsn, $username, $password, $options );
 		$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 		return $pdo;
