@@ -53,7 +53,7 @@
  *
  *
  * @author	Thiago Delgado Pinto
- * @version	1.1.3
+ * @version	1.2
  *
  * @see		{@link JSON}, {@link Response}
  *
@@ -67,8 +67,8 @@ define( 'CLASS_PARAMETER', '_c' );
 define( 'METHOD_PARAMETER', '_m' );
 define( 'RAW_PARAMETER', '_raw' );
 
-function _error( $msg ) {	
-	die( JSON::encode( new Response( false, $msg ) ) );
+function _error( $msg, $data = null ) {	
+	die( JSON::encode( new Response( false, $msg, $data ) ) );
 }
 
 $targetArray = $_REQUEST;
@@ -99,6 +99,6 @@ try {
 		die( JSON::encode( new Response( true, '', $data ) ) );
 	}
 } catch (Exception $e) {
-	_error( $e->getMessage() );
+	_error( $e->getMessage(), get_class( $e ) ); // Send the exception class as the "data"
 }
 ?>
