@@ -10,10 +10,10 @@
  */
  
 /**
- * An exception related to the domain.
+ * An exception that indicates that a business rule was broken.
  *
  * @author	Thiago Delgado Pinto
  */
-class DomainException extends RuntimeException {
+class BusinessRuleException extends RuntimeException {
 }
 ?>

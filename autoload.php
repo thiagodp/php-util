@@ -10,46 +10,83 @@
  */
  
 /**
- * This file allows to automatically load a class without declaring its file, where the file have
- * the same name as the class, plus '.php' or '.class.php'. The file will be searched in all the
- * subdirectories where the 'autoload.php' file is in.
+ * By default, this file allows to automatically load a class without
+ * need to include its name (ex: require_once 'MyClass.php').
  *
- * <h2>EXAMPLE</h2>
- * <p> 
+ * The class file should have the same name of it class. By default,
+ * the file extension should be ".php", but you can configure it easily.
+ *
+ * <br />
+ * USE EXAMPLE:
  * <code>
  *		<?php
  * 		require_once( 'autoload.php' );
- *		$obj = new MyClass(); // Will search for MyClass.php or MyClass.class.php
+ *		// Not necessary to include "MyClass.php" anymore !
+ *
+ *		$obj = new MyClass(); // Will search for MyClass.php
  *		?>
  * </code>
- * </p> 
- * <h2>HOW TO USE IT</h2>
+ * 
+ * <br />
+ * CONFIGURATION:
  * <p> 
- *		Put this file at your (root) source folder. It should exists a 'php-util' folder inside it.
+ * 1.	Copy this file to your (root) source folder. It should
+ * 		exists a 'php-util' folder inside it.
+ * 2.	Create a "subdir.lst" file with your subdirectories (one per line)
+ *		and keep it updated.
+ * </p>
+ 
+ * <br /> 
+ * IMPORTANT:
+ * 1.	If you do not create "subdir.lst" it will be created automatically.
+ *		Do not forget about keeping it updated!
+ * 2.	You do not need to use this external file! Just change the code to
+ * 		use use a raw array like this:
+ *		<code>
+ *		$subDirs = array( '/path/to/mydir', '/path/to/myotherdir' );
+ *		</code> 
  * </p>
  *
  *
  * @author	Thiago Delgado Pinto
- * @version	1.0
+ * @version	2.0
  *
  * @see		{@link ClassLoader} {@link DirUtil}
  */
- 
-// IMPORTANT: autoload.php should be put in a folder a level up from php-util.
+
 require_once( 'php-util/ClassLoader.php' );	// Uses ClassLoader::load
-require_once( 'php-util/DirUtil.php' );		// Uses DirUtil::allSubDirs
+require_once( 'php-util/io/DirUtil.php' );	// Uses DirUtil::allSubDirs
 
 /**
- * Allows to automatically load classes' files.
+ * Automatically load classes' files.
  *
  * @param className	the class name to be loaded.
  */
 function __autoload( $className ) {
-	static $classLoader = null;
-	if ( ! isset( $classLoader ) ) {	
-		$subDirs = DirUtil::allSubDirs( '.' );
+	static $classLoader = null; // Created just once
+	if ( ! isset( $classLoader ) ) { 
+
+		// File to store the directories list
+		define( 'SUB_DIR_FILE', 'subdir.lst' );
+		$subDirs = array();
+	
+		if ( file_exists( SUB_DIR_FILE ) ) {
+			// Load the subdirectories from the file		
+			$content = file_get_contents( SUB_DIR_FILE );
+			$subDirs = explode( PHP_EOL, $content );
+		} else {
+			// Save the subdirectories to the file
+			$subDirs = DirUtil::allSubDirs( '.' );
+			$content = implode( PHP_EOL, $subDirs );
+			file_put_contents( SUB_DIR_FILE, $content, LOCK_EX );			
+		}
+		
+		// Here you can configure other file extensions. Example:
+		// $classLoader = new ClassLoader( $subDirs,
+		// 		array( '.php', '.class.php' ) );
 		$classLoader = new ClassLoader( $subDirs );
 	}
+	// Load the class
 	$classLoader->load( $className );
 }
 ?>
