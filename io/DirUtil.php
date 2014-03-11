@@ -41,7 +41,7 @@ class DirUtil {
 		foreach ( $itIt as $file ) {
 			if ( $file->isDir() ) {
 				// Replace \ with /
-				$path = str_replace( '\\', '/', $file->getRealpath() );
+				$path = str_replace( '\\', '/', $file->getPathname() );
 				// Do not allow duplicates
 				if ( array_search( $path, $paths ) !== false ) {
 					continue;
