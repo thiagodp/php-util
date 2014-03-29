@@ -49,7 +49,7 @@
  *
  *
  * @author	Thiago Delgado Pinto
- * @version	2.0
+ * @version	3.0
  *
  * @see		{@link ClassLoader} {@link DirUtil}
  */
@@ -62,7 +62,7 @@ require_once( 'php-util/io/DirUtil.php' );	// Uses DirUtil::allSubDirs
  *
  * @param className	the class name to be loaded.
  */
-function __autoload( $className ) {
+function phpUtilAutoload( $className ) {
 	static $classLoader = null; // Created just once
 	if ( ! isset( $classLoader ) ) { 
 
@@ -89,4 +89,7 @@ function __autoload( $className ) {
 	// Load the class
 	$classLoader->load( $className );
 }
+
+// Register
+spl_autoload_register( 'phpUtilAutoload' );
 ?>
