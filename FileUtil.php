@@ -34,6 +34,19 @@ class FileUtil {
 	
 	/**
 	 * Prevent the direct access to the current file, redirecting the user to another page.
+	 * <br />
+	 * Use it when you do not want a user having access to a PHP file and you do not want
+	 * to configure this in a .htaccess file.
+	 * <br />
+	 * How to use it:
+	 * <code>
+	 *   <?php // your PHP file
+	 *   ... (includes)
+	 *   // Redirect the user to mysite.com whether he/she tries to
+	 *   // access the current file directly.
+	 *   preventDirectAccessToTheCurrentFile( 'http://mysite.com' );
+	 *   ?>
+	 * </code>
 	 *
 	 * @param urlToRedirect	the url used to redirect the user.
 	 */
@@ -41,7 +54,7 @@ class FileUtil {
 		$whereTheFileIs	= basename( $_SERVER[ 'PHP_SELF' ] );
 		$whereTheFileWasCalled = basename( __FILE__ );
 		if ( $whereTheFileIs === $whereTheFileWasCalled ) {
-			// Prevent loop
+			// Prevent looping
 			if ( $urlToRedirect === $whereTheFileIs ) {
 				die( 'You have tried to redirect to the same URL.' );
 			}
