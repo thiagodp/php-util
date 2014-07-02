@@ -21,41 +21,51 @@
  * <code>
  *		<?php
  * 		require_once( 'autoload.php' );
- *		// Not necessary to include "MyClass.php" anymore !
+ *		// Not necessary to include "MyClass.php" anymore ;)
  *
  *		$obj = new MyClass(); // Will search for MyClass.php
  *		?>
  * </code>
  * 
  * <br />
- * CONFIGURATION:
- * <p> 
- * 1.	Copy this file to your (root) source folder. It should
- * 		exists a 'php-util' folder inside it.
- * 2.	Create a "subdir.lst" file with your subdirectories (one per line)
- *		and keep it updated.
- * </p>
- 
- * <br /> 
- * IMPORTANT:
- * 1.	If you do not create "subdir.lst" it will be created automatically.
- *		Do not forget about keeping it updated!
- * 2.	You do not need to use this external file! Just change the code to
- * 		use use a raw array like this:
- *		<code>
- *		$subDirs = array( '/path/to/mydir', '/path/to/myotherdir' );
- *		</code> 
- * </p>
+ * <pre>
+ * OPTIONAL CONFIGURATIONS:
+ *
+ * - You may want to use autoload.php in your root php folder, in order to
+ *   load any file you want to. For doing so, copy this file to your (root)
+ *   php source folder. The "php-util" project folder should exist under it.
+ *
+ * - By default, autoload.php creates a "subdir.lst" in the first time it is
+ *   executed. This file will contain all the subdirectories under its current
+ *   folder. You may want to manually define your own subdirectories, in order
+ *   to lower the load time.
+ *
+ * - You do not need to use subdir.lst. Instead, just change the source code
+ *   to use a simple array like this:
+ *   <code>
+ *	 $subDirs = array( '/path/to/dir1', '/path/to/dir2', '/path/to/dirN' );
+ *	 </code> 
+ *   
+ * </pre>
+ * <br />
+ *
+ * IMPORTANT: Whether you prefer using subdir.lst (this is the default behaviour),
+ *            do not forget about keeping it updated.
  *
  *
  * @author	Thiago Delgado Pinto
- * @version	3.0
+ * @version	3.1
  *
  * @see		{@link ClassLoader} {@link DirUtil}
  */
 
-require_once( 'php-util/ClassLoader.php' );	// Uses ClassLoader::load
-require_once( 'php-util/io/DirUtil.php' );	// Uses DirUtil::allSubDirs
+ 
+// Whether the current file can see a 'php-util' folder, its dependencies are
+// inside this folder. Otherwise, they are in the current folder.
+$phpUtilPath = file_exists( 'php-util' ) ? 'php-util/' : '';
+ 
+require_once( $phpUtilPath . 'ClassLoader.php' );	// Uses ClassLoader::load
+require_once( $phpUtilPath . 'io/DirUtil.php' );	// Uses DirUtil::allSubDirs
 
 /**
  * Automatically load classes' files.
