@@ -5,7 +5,7 @@ Some useful PHP libraries.
 
 This project is enabled to work with <a href="https://getcomposer.org/" >Composer</a> and had been published at <a href="https://packagist.org/" >Packagist</a>.
 
-For installing with Composer, create a <pre>composer.json</pre> file in your project root, with the following content:
+For installing with Composer, create a <i>composer.json</i> file in your project root, with the following content:
 <pre>
 {
     "repositories": [
