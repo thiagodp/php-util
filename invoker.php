@@ -11,46 +11,80 @@
  
 /**
  * This file allows to automatically call a class method defined by the CLASS_PARAMETER and the
- * METHOD_PARAMETER and sends back to the client its return, in JSON format, using the Response
- * class structure.
- *
- * <h2>EXAMPLE</h2>
+ * METHOD_PARAMETER constants and to send the returning content back to the client machine,
+ * using the JSON format. By default, the returned content is wrapped inside a Response object
+ * (@see Response.php). We recommend to do so, because it turn it simpler and standardised the
+ * way the client deal with responses from the server. However, if you do not want to wrap the
+ * returned content, you can pass the RAW_PARAMETER argument (with an empty value).
  * <p>
+ *
+ * Whether the given class exists, the given method exists, and the given method works
+ * as expected (without throwing an exception), the Response object will be instantiated like
+ * this:
  * <code>
- *		<html>
- *		<body>
- * 			<script type='text/javascript' charset='UTF-8' src='jquery.js' ></script>
- *			<script type='text/javascript' charset='UTF-8' >
- *				// Example 1
- *				var data = { _c : 'SomeClass', _m : 'someMethod' };
- *				var responseFn = function( response ) {
- *					console.log( response ); // See Response.php
- * 				};
- *				$.post( 'invoker.php', data, responseFn, 'json' );
- *
- *				// Example 2 
- *				$( '#saveButton' ).click( function() {
- *					var formData = $( '#aForm' ).serializeArray();
- *					formData[ formData.length ] = { name: '_c', value: 'AnotherClass' };
- *					formData[ formData.length ] = { name: '_m', value: 'anotherMethod' }; 
- *					var formResponseFn = function( response ) {
- *						alert( response.success ? 'Saved.' : response.message );
- *					};
- *					$.post( 'invoker.php', formData, formResponseFn, 'json' );
- *				}; // click
- *				
- *			</script>
- *		</body> 
- * 		</html>
+ * new Response( true, '', $data );
  * </code>
- * This will make invoker.php to create a SomeClass instance and call its someMethod method.<br />
- * The method return will be send back to the client (as JSON) in the "data" field.
- * </p>
- * <h2>HOW TO USE IT</h2>
- * <p>
- * Call it from your HTML file passing the expected REQUEST parameters (currently _c and _m).
- * </p>
+ * where <code>$data</code> is the return  value of the given method.
  *
+ * Otherwise, the Response object will be instantiated like this:
+ * <code>
+ * new Response( false, $errorMessage, $exceptionClassName );
+ * </code>
+ * where <code>$errorMessage</code> is the error message or the exception message, and
+ * <code>$exceptionClassName</code> is the the name of the exception class, or null,
+ * if a exception was not thrown.
+ *
+ * </p>
+ * <p>
+ * How to use it:
+ * <code>
+ *   ...
+ *	   <body>
+ *     <!-- Using JQuery, but it is not necessary to use invoker.php -->
+ * 	   <script type='text/javascript' charset='UTF-8' src='jquery.js' ></script>
+ *
+ *	   <script type='text/javascript' charset='UTF-8' >
+ *     //
+ *     // EXAMPLE 1
+ *     // The client will send a POST request to invoker.php, passing the
+ *     // expect arguments to it: "_c" and "_m". The server will instantiate
+ *     // the given class (MyClass) and call the given method (myMethod). Then,
+ *     // it will create a Response (PHP) object, put method's return value into
+ *     // the "data" attribute, and return the object as JSON.
+ *     //
+ *     var data = { _c : 'MyClass', _m : 'myMethod' };
+ *     var postResponseFn = function( response ) {
+ *       console.log( response ); // Expect to show a Response object
+ *     };
+ *     $.post( 'php-util/invoker.php', data, postResponseFn, 'json' );
+ *
+ *     //
+ *     // EXAMPLE 2 
+ *     // We are configuring a "Save" button to send data from a form (myForm)
+ *     // using a POST request to invoker.php. The request is passing the
+ *     // expected arguments, "_c" and "_m", plus the form data.
+ *     // The server will instantiate the given class (AnotherClass) and call the
+ *     // given method (myMethod). Then, it will create a Response (PHP) object,
+ *     // put method's return value into the "data" attribute, and return the
+ *     // object as JSON. The client will receive the object and show an alert
+ *     // message.
+ *     // 
+ *     var formSaveButtonClickFn = function() {
+ *       var formData = $( '#myForm' ).serializeArray();
+ *       formData[ formData.length ] = { name: '_c', value: 'AnotherClass' };
+ *       formData[ formData.length ] = { name: '_m', value: 'anotherMethod' }; 
+ *       var formResponseFn = function( response ) {
+ *         alert( response.success ? 'Saved.' : response.message );
+ *		 };
+ *		 $.post( 'php-util/invoker.php', formData, formResponseFn, 'json' );
+ *	   }; // function
+ *
+ *     $( '#saveButton' ).click( formSaveButtonClickFn );		
+ *     </script>
+ *   </body> 
+ *   ...
+ * </code>
+ * </p>
  *
  * @author	Thiago Delgado Pinto
  * @version	1.2
