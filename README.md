@@ -5,8 +5,8 @@ Some useful PHP libraries.
 
 This project is enabled to work with <a href="https://getcomposer.org/" >Composer</a> and had been published at <a href="https://packagist.org/" >Packagist</a>.
 
-For installing with Composer, create a <code>composer.json</code> file in your project root, with the following content:
-<code>
+For installing with Composer, create a <pre>composer.json</pre> file in your project root, with the following content:
+<pre>
 {
     "repositories": [
         {
@@ -18,9 +18,9 @@ For installing with Composer, create a <code>composer.json</code> file in your p
         "thiagodp/php-util": "dev-master"
     }
 }
-</code>
+</pre>
 Then, go to your project directory and type the following command:
-<code>
+<pre>
 composer install
-</code>
+</pre>
 For more information on how using Composer, please see its <a href="https://getcomposer.org/doc/" >Documentation</a> page.
