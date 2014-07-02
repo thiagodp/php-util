@@ -1,6 +1,6 @@
 {
     "name": "thiagodp/php-util",
-	"version" : "1.0",
+	"version" : "0.9.1",
     "repositories": [
         {
             "type": "vcs",
