@@ -1,0 +1,10 @@
+{
+    "name": "thiagodp/php-util",
+	"version" : "1.0",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/thiagodp/php-util"
+        }
+    ]
+}
