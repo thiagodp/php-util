@@ -12,60 +12,82 @@
 /**
  * Useful string functions.
  *
- * @author	Thiago Delgado Pinto
- * @version	0.9
+ * @author		Thiago Delgado Pinto
+ * @version		1.0
  */
 class StrUtil {
 
 	/**
-	 * Transform a not encoded string to uppercase.
+	 * Transform a text to uppercase.
 	 *
-	 * @param text	A not encoded text.
-	 * @return		A not encoded text in uppercase.
+	 * @deprecated	Use {@link mb_strtoupper} instead.
+	 *
+	 * @param text		the text to transform.
+	 * @param encoding	the character encoding to use. default is {@link mb_internal_encoding()}.
+	 * @return			the text in uppercase.
 	 */
-	static function toUpper( $text ) {
-		return self::applyCase( $text, true );
+	static function toUpper( $text, $encoding = null ) {
+		$enc = is_string( $encoding ) ? $encoding : mb_internal_encoding();
+		return mb_strtoupper( $text, $enc );
 	}
 
 	/**
-	 * Transform a not encoded string to lowercase.
+	 * Transform a text to lowercase.
 	 *
-	 * @param text	A not encoded text.
-	 * @return		A not encoded text in lowercase.
+	 * @deprecated	Use {@link mb_strtolower} instead.
+	 *
+	 * @param text		the text to transform.
+	 * @param encoding	the character encoding to use. default is {@link mb_internal_encoding()}.
+	 * @return			the text in lowercase.
 	 */
-	static function toLower( $text ) {
-		return self::applyCase( $text, false );
+	static function toLower( $text, $encoding = null ) {
+		$enc = is_string( $encoding ) ? $encoding : mb_internal_encoding();
+		return mb_strtolower( $text, $enc );
 	}
 	
 	/**
 	 * Transform all the letters to lowercase and just the first letter of each word to uppercase.
-	 *
-	 * TODO: Add a parameter "exceptions" where can be supplied the words to not consider.
 	 * 
-	 * @param text		The text to transform.
-	 * @param separator	Array of separator characters (one character per value).
-	 * @return			The transformed text.
-	 */
-	static function upperCaseFirst( $text, $separator = array( ' ' ) ) {
-		return preg_replace( '/([' . implode( '', $separator ) . ']|^)([a-z])/e',
-			'"$1".StrUtil::toUpper("$2")', StrUtil::toLower( $text ) );
-	}
-	
-	/**
-	 * Apply a case transformation to the text.
+	 * This method can be replaced by {@code mb_convert_case( 'your text here', MB_CASE_TITLE )} when
+	 * the {@code exceptions} parameter is not given.
 	 *
-	 * @param text				A not encoded text.
-	 * @param convertToUpper	true to transform to upper case or false to lower case.
-	 * @return 					A not encoded text transformed to upper or lower case.
+	 * How to use it:
+	 * #( 'john von neumann', array( ' von ' ) ) ==> 'John von Neumann'
+	 * #( 'JOHN VON NEUMANN', array( ' von ' ) ) ==> 'John von Neumann'
+	 * #( 'maria da silva e castro', array( ' da ', ' e '  ) ) ==> 'Maria da Silva e Castro'
+	 *
+	 * @see {@link commonNameExceptions}.
+	 * 
+	 * @param text			text to transform.
+	 * @param exceptions	array of words to ignore exceptions.
+	 * @param encoding		the character encoding to use. default is {@link mb_internal_encoding()}.
+	 * @return				the transformed text.
 	 */
-	private static function applyCase( $text, $convertToUpper = false ) {		
-		$func = $convertToUpper ? 'strtoupper' : 'strtolower'; // Choose the function to apply
-		$newText = htmlentities( $func( $text ) ); // Convert to entities
-		$range = $convertToUpper ? 'a-z' : 'A-Z'; // Choose the character range after "&"
-		$search = '/\&(['. $range .'])(acute|cedil|circ|elig|horn|grave|ring|slash|th|tilde|uml);/e'; // Example: &aacute;
-		$newText2 = preg_replace( $search, "'&'.". $func ."('\\1').'\\2'.';'", $newText ); // Example: &aacute; becomes &Aacute;
-		return html_entity_decode( $newText2 ); // Decode the entities
-	}	
+	static function upperCaseFirst(
+		$text,
+		array $exceptions = array(),
+		$encoding = null
+		) {
+		$enc = is_string( $encoding ) ? $encoding : mb_internal_encoding();
+		$newText = mb_convert_case( $text, MB_CASE_TITLE, $enc );
+		if ( count( $exceptions ) < 1 ) {
+			return $newText;
+		}
+		foreach ( $exceptions as $e ) {
+			$newText = str_replace( mb_convert_case( $e, MB_CASE_TITLE, $enc ),
+				mb_convert_case( $e, MB_CASE_LOWER, $enc ), $newText );
+		}
+		return $newText;
+	}
+
+	/** Common name separators to be used as exceptions with {@link upperCaseFirst}. */
+	static function commonNameSeparators() {
+		return array(
+			' de ', ' da ', ' di ', ' del ', ' della ',
+			' e ', ' i ', ' y ',
+			' van ', ' von '
+			);
+	}
 }
 
 ?>
