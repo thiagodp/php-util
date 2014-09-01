@@ -208,7 +208,7 @@ foreach ( $fields as $field => $type ) {
 	$content .= ''
 		// Getter
 		. PHP_EOL . "\tfunction " . __getterNameFor( $field, $getter ) . '() { '
-		. "return \$$field; }"
+		. "return \$this->$field; }"
 		// Setter
 		. PHP_EOL . "\tfunction " . __setterNameFor( $field, $setter ) . '( '
 		. __setterParameterFor( $field, $type ) .' ) { '
