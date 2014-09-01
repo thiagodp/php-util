@@ -14,7 +14,7 @@
  *  > Run this file into your browser and follow the instructions. :)
  *
  * @author	Thiago Delgado Pinto
- * @version	1.0
+ * @version	1.1
  */ 
 
 //
@@ -212,7 +212,7 @@ foreach ( $fields as $field => $type ) {
 		// Setter
 		. PHP_EOL . "\tfunction " . __setterNameFor( $field, $setter ) . '( '
 		. __setterParameterFor( $field, $type ) .' ) { '
-		. '$this->' . $field . ' = ' . $field . '; }'
+		. '$this->' . $field . ' = $' . $field . '; }'
 		. PHP_EOL
 		;
 }
