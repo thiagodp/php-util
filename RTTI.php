@@ -13,16 +13,16 @@
  * Run time type information utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.2
+ * @version	2.0
  */
 class RTTI {
 
 	/**
-	 * Get private attribute names and their values as a map.
+	 * Get the names and values of private attributes as a map.
 	 * 
 	 * @param obj			the object to get the private attributes.
 	 * @param getterPrefix	the getter prefix used to get the values (defaults to 'get').
-	 * @param useCamelCase	if uses camel case in method name (default to true).
+	 * @param useCamelCase	if uses camel case in method names (default to true).
 	 * @return				an map with the found attribute names and their values.
 	 */
 	static function getPrivateAttributes( $obj, $getterPrefix = 'get', $useCamelCase = true ) {
@@ -49,6 +49,35 @@ class RTTI {
 		return $attributes;		
 	}
 
+	/**
+	 * Set the attributes of an object with the values of a given array.
+	 *
+	 * @param map			the array that contains the keys and values.
+	 * @param obj			the object to fill with the array values.
+	 * @param setterPrefix	the prefix used for setters (default to 'set').
+	 * @param useCamelCase	if uses camel case in method names (default to true).
+	 */
+	static function setPrivateAttributes(
+		array $map, &$obj, $setterPrefix = 'set', $useCamelCase = true ) {
+		
+		$reflectionObject = new ReflectionObject( $obj );
+		$currentClass = new ReflectionClass( $obj );
+		while ( $currentClass !== false && ! $currentClass->isInterface() ) {					
+			$properties = $currentClass->getProperties( ReflectionProperty::IS_PRIVATE );
+			foreach ( $properties as $property ) {
+				$attributeName = $property->getName();
+				$methodName = $setterPrefix . ( $useCamelCase ? ucfirst( $attributeName ) : $attributeName );
+				if ( $reflectionObject->hasMethod( $methodName ) ) {
+					$method = $reflectionObject->getMethod( $methodName );
+					if ( $method->isPublic() && isset( $map[ $attributeName ] ) ) {
+						$method->invoke( $obj, $map[ $attributeName ] );
+					}
+				}
+			}
+			$currentClass = $currentClass->getParentClass();
+		}
+	}
+	
 }
 
 ?>
