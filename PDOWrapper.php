@@ -165,6 +165,53 @@ class PDOWrapper {
 		}
 		return $sql;
 	}
+
+	/**
+	 * Fetch objects from the rows returned by the given query.
+	 *
+	 * The class of these objects can be defined (or not). In this
+	 * case, the objects' private attributes will receive the column's
+	 * values. Whether the class does not have a private attribute with
+	 * the same name of a column, a public attribute will be created and
+	 * it will receive the respective value.
+	 *
+	 * How to use it:
+	 * <code>
+	 *	$users = $pdoW->fetchObjects( 'select * from user', array(), 'User' );
+	 * </code>	 
+	 *
+	 *
+	 * @param sql			the query.
+	 * @param parameters	the query parameters (optional).
+	 * @param className		the name of the class used to instance
+	 * 						the objects (optional).	 
+	 * @return				an array with the fetched objects.
+	 */
+	function fetchObjects( $sql, array $parameters = array(), $className = '' ) {
+		$ps = $this->execute( $sql, $parameters );
+		return $this->fetchObjectsFromStatement( $ps, $className );
+	}
+	
+	/**
+	 * Fetch objects from a prepared statement.
+	 *
+	 * @param ps		the prepared statement.
+	 * @param className	the objects' class name (optional).
+	 */
+	function fetchObjectsFromStatement( PDOStatement $ps, $className = '' ) {
+		$fetchMode = PDO::FETCH_OBJ;
+		if ( $className != '' ) {
+			$ps->setFetchMode( PDO::FETCH_CLASS, $className );
+			$fetchMode = PDO::FETCH_CLASS;
+		}
+		$objects = array();
+		while ( ( $obj = $ps->fetch( $fetchMode ) ) !== false ) {
+			array_push( $objects, $obj );
+		}
+		return $objects;
+	}
+
+
 	
 	/**
 	 * Make a query and return an array of objects.<br />
