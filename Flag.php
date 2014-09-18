@@ -21,7 +21,7 @@
  *		} 
  *	}
  *
- * Now you can add, check or remove this flags easily:
+ * Now you can add, check or remove flags easily:
  *
  * $p = new Permition();
  * $p->add( Permition::all() );
@@ -38,27 +38,32 @@ class Flag {
 
 	private $content = 0;
 	
+	/// Return the content of the flag.
 	function get() {
 		return $this->content;
 	}
 	
+	/// Return true whether it has a certain flag.
 	function has( $value ) {
 		if ( ! $this->isValid( $value ) ) { return; }
 		return $value == ( $this->content & $value );
 	}
 
+	/// Add the given flag.
 	function add( $value ) {
 		if ( ! $this->isValid( $value ) ) { return; }
 		$this->content |= $value;
 		return $this;
 	}
 	
+	/// Remove the given flag.
 	function remove( $value ) {
 		if ( ! $this->isValid( $value ) ) { return; }
 		$this->content &= ~$value;
 		return $this;
 	}
 	
+	/// Return true whether the flag value is considered valid.
 	private function isValid( $value ) {
 		return is_integer( $value ) && $value >= 0;
 	}
