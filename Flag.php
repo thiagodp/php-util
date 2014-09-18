@@ -9,7 +9,7 @@
  * <pre>
  * Example on how using it:
  *
- * class Permition extends Flag {
+ * class Permission extends Flag {
  *
  * 		const ACCESS = 1;
  *		const CREATE = 2;
@@ -21,16 +21,15 @@
  *		} 
  *	}
  *
- * Now you can add, check or remove flags easily:
+ * Now you can add, check, and remove flags easily:
  *
- * $p = new Permition();
- * $p->add( Permition::all() );
+ * $p = new Permission( Permission::all() );
  * echo '<br />', $p->get(); // 15
- * $p->add( Permition::CREATE ); 
+ * $p->add( Permission::CREATE ); 
  * echo '<br />', $p->get(); // stay 15 !
- * $p->remove( Permition::CREATE ); 
+ * $p->remove( Permission::CREATE ); 
  * echo '<br />', $p->get(); // 13 
- * echo '<br />', $p->has( Permition::CREATE ) ? 'can create' : 'cannot create';
+ * echo '<br />', $p->has( Permission::CREATE ) ? 'can create' : 'cannot create';
  * </pre>
  *
  */
@@ -38,35 +37,40 @@ class Flag {
 
 	private $content = 0;
 	
+	function __construct( $value = 0 ) {
+		if ( $value != 0 ) {
+			$this->add( $value );
+		}
+	}
+	
 	/// Return the content of the flag.
-	function get() {
+	final function get() {
 		return $this->content;
 	}
 	
 	/// Return true whether it has a certain flag.
-	function has( $value ) {
+	final function has( $value ) {
 		if ( ! $this->isValid( $value ) ) { return; }
 		return $value == ( $this->content & $value );
 	}
 
 	/// Add the given flag.
-	function add( $value ) {
+	final function add( $value ) {
 		if ( ! $this->isValid( $value ) ) { return; }
 		$this->content |= $value;
 		return $this;
 	}
 	
 	/// Remove the given flag.
-	function remove( $value ) {
+	final function remove( $value ) {
 		if ( ! $this->isValid( $value ) ) { return; }
 		$this->content &= ~$value;
 		return $this;
 	}
 	
 	/// Return true whether the flag value is considered valid.
-	private function isValid( $value ) {
+	protected function isValid( $value ) {
 		return is_integer( $value ) && $value >= 0;
 	}
-}
-
+} 
 ?>
