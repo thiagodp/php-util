@@ -5,7 +5,12 @@ Some useful PHP libraries.
 
 This project is enabled to work with <a href="https://getcomposer.org/" >Composer</a> and had been published at <a href="https://packagist.org/" >Packagist</a>.
 
-For installing using <a href="https://getcomposer.org/" >Composer</a>, create a <code>composer.json</code> file in your project root, with the following content:
+For installing using <a href="https://getcomposer.org/" >Composer</a>, type the following command:
+<pre><code>
+composer require thiagodp/php-util:dev-master
+</code></pre>
+
+Or create a <code>composer.json</code> file in your project root, with the following content:
 <pre><code class="language-javascript" >
 {
     "repositories": [
