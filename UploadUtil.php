@@ -17,7 +17,7 @@ require_once 'UploadedFile.php';
  * @see UploadedFile
  *
  * @author	Thiago Delgado Pinto
- * @version	0.1
+ * @version	0.2
  */
 class UploadUtil {
 
@@ -41,7 +41,7 @@ class UploadUtil {
 		$tmpNames = $_FILES[ $name ][ 'tmp_name' ];
 		$errors = $_FILES[ $name ][ 'error' ];		
 		$files = array();
-		$count = count( $_FILE[ $name ][ 'name' ] );
+		$count = count( $_FILES[ $name ][ 'name' ] );
 		for ( $i = 0; $i < $count; ++$i ) {
 			$uf = new UploadedFile( $names[ $i ], $types[ $i ], $sizes[ $i ], $tmpNames[ $i ], $errors[ $i ] );
 			array_push( $files, $uf );
