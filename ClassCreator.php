@@ -60,14 +60,18 @@ function __functionName( $field ) {
 		. mb_substr( $field, 1 );
 }
 
-function __setterParameterFor( $field, $type ) {
+function __setterParameterFor( $field, $type, $useTypes = TRUE ) {
+	if ( ! $useTypes ) {
+		return '$' . $field;
+	}
+
 	if ( 'array' === mb_strtolower( $type ) ) {
 		return 'array $' . $field;
 	}
 	
 	$ignoredTypes = array( '', 'boolean', 'bool', 'integer', 'int',
 	  'double', 'float', 'string', 'object', 'resource',
-	  'NULL', 'unknown type' );
+	  'null', 'unknown type' );
 	if ( ! in_array( mb_strtolower( $type ), $ignoredTypes ) ) {
 		return $type . ' $' . $field;
 	}
@@ -91,6 +95,7 @@ define( '_EXTENSION', '_x' );
 define( '_GETTER', '_g' );
 define( '_SETTER', '_s' );
 define( '_NULLIFY', '_n' );
+define( '_TYPE_IN_SETTER', '_t' );
 
 // Default values
 
@@ -101,6 +106,7 @@ define( 'DEFAULT_GETTER', 'get' );
 define( 'DEFAULT_SETTER', 'set' );
 define( 'DEFAULT_TYPE', 'string' );
 define( 'DEFAULT_NULLIFY', false );
+define( 'DEFAULT_TYPE_IN_SETTER', true );
 
 // Example values
 
@@ -127,6 +133,7 @@ $options = array(
 	  , _GETTER => 'for defining the getter prefix (default <code>' . __defaultValue( DEFAULT_GETTER ) . '</code>)'
 	  , _SETTER => 'for defining the setter prefix (default <code>' . __defaultValue( DEFAULT_SETTER ) . '</code>)'
 	  , _NULLIFY => 'for setting <code>NULL</code> as the initial value for your own data types (default <code>' . __defaultValue( DEFAULT_NULLIFY ) . '</code>)'
+	  , _TYPE_IN_SETTER => 'for using your own data types in setters\' parameters (default <code>' . __defaultValue( DEFAULT_TYPE_IN_SETTER ) . '</code>).'
 	  );
 	  
 ksort( $options );
@@ -149,6 +156,7 @@ $extension = isset( $parameters[ _EXTENSION ] ) ? $parameters[ _EXTENSION ] : DE
 $getter = isset( $parameters[ _GETTER ] ) ? $parameters[ _GETTER ] : DEFAULT_GETTER;
 $setter = isset( $parameters[ _SETTER ] ) ? $parameters[ _SETTER ] : DEFAULT_SETTER;
 $nullify = isset( $parameters[ _NULLIFY ] ) ? (boolean) $parameters[ _NULLIFY ] : DEFAULT_NULLIFY;
+$typeInSetter = isset( $parameters[ _TYPE_IN_SETTER ] ) ? (boolean) $parameters[ _TYPE_IN_SETTER ] : DEFAULT_TYPE_IN_SETTER;
 
 
 //
@@ -211,7 +219,7 @@ foreach ( $fields as $field => $type ) {
 		. "return \$this->$field; }"
 		// Setter
 		. PHP_EOL . "\tfunction " . __setterNameFor( $field, $setter ) . '( '
-		. __setterParameterFor( $field, $type ) .' ) { '
+		. __setterParameterFor( $field, $type, $typeInSetter ) .' ) { '
 		. '$this->' . $field . ' = $' . $field . '; }'
 		. PHP_EOL
 		;
