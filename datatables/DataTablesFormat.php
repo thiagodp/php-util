@@ -14,24 +14,24 @@
  * 
  * @see http://datatables.net/
  *
- * @version 0.1
+ * @version 0.2
  * @author Thiago Delgado Pinto
  */
 class DataTablesFormat {
 	
-	private $iTotalRecords = 0;
-	private $iTotalDisplayRecords = 0;
-	private $aaData = array();
+	private $recordsTotal = 0;
+	private $recordsFiltered = 0;
+	private $data = array();
 	
-	function __construct( $maxRows, $rowsToDisplay, $data ) {
-		$this->iTotalRecords = $maxRows;
-		$this->iTotalDisplayRecords = $rowsToDisplay;
-		$this->aaData = $data;
+	function __construct( $recordsTotal, $recordsFiltered, $data ) {
+		$this->recordsTotal = $recordsTotal;
+		$this->recordsFiltered = $recordsFiltered;
+		$this->data = $data;
 	}
 	
-	function getITotalRecords() { return $this->iTotalRecords; }
-	function getITotalDisplayRecords() { return $this->iTotalDisplayRecords; }
-	function getAaData() { return $this->aaData; }
+	function getRecordsTotal() { return $this->recordsTotal; }
+	function getRecordsFiltered() { return $this->recordsFiltered; }
+	function getData() { return $this->data; }
 }
 
 ?>
