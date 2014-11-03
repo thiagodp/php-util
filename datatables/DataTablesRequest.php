@@ -4,7 +4,7 @@
  * Some of DataTables request parameters.
  *
  * @author	Thiago Delgado Pinto
- * @version	0.9.1
+ * @version	0.9.2
  * @see		https://datatables.net/manual/server-side#Sent-parameters 
  */
 class DataTablesRequest {
@@ -72,7 +72,7 @@ class DataTablesRequest {
 	
 	/** @return string or null */
 	static function searchWithKey( $key ) {
-		return isset( $_REQUEST[ self::KEY_SEARCH ] && $_REQUEST[ self::KEY_SEARCH ][ $key ] )
+		return isset( $_REQUEST[ self::KEY_SEARCH ] ) && isset( $_REQUEST[ self::KEY_SEARCH ][ $key ] )
 			? $_REQUEST[ self::KEY_SEARCH ][ $key ]
 			: null;
 	}	
