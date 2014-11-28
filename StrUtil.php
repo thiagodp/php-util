@@ -18,6 +18,36 @@
 class StrUtil {
 
 	/**
+	 * Transform a snake_case string into a camelCase string.
+	 *
+	 * @param string $snake	the string to convert
+	 * @return string
+	 */
+	function snakeToCamel( $snake ) {
+			$pieces = explode( '_', $snake );
+			$count = count( $pieces );
+			if ( 1 == $count ) {
+				return $snake;
+			}
+			$str = $pieces[ 0 ];
+			for ( $i = 1; $i < $count; ++$i ) {
+				$p = $pieces[ $i ];
+				$str .= mb_strtoupper( $p[ 0 ] ) . mb_substr( $p, 1 );
+			}
+			return $str;
+	}
+
+	/**
+	 * Transform a camelCase string into a snake_case string.
+	 *
+	 * @param string $camel	the string to convert
+	 * @return string
+	 */
+	function camelToSnake( $camel ) {
+		return mb_strtolower( preg_replace( '/([A-Z])/u', "_$1", $camel ) );
+	}
+
+	/**
 	 * Transform a text to uppercase.
 	 *
 	 * @deprecated	Use {@link mb_strtoupper} instead.
