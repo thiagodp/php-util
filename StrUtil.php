@@ -23,7 +23,7 @@ class StrUtil {
 	 * @param string $snake	the string to convert
 	 * @return string
 	 */
-	function snakeToCamel( $snake ) {
+	static function snakeToCamel( $snake ) {
 			$pieces = explode( '_', $snake );
 			$count = count( $pieces );
 			if ( 1 == $count ) {
@@ -43,7 +43,7 @@ class StrUtil {
 	 * @param string $camel	the string to convert
 	 * @return string
 	 */
-	function camelToSnake( $camel ) {
+	static function camelToSnake( $camel ) {
 		return mb_strtolower( preg_replace( '/([A-Z])/u', "_$1", $camel ) );
 	}
 
