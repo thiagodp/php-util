@@ -101,7 +101,7 @@ class PDOWrapper {
 		$countColumn = 'C_O_U_N_T_';
 		$cmd = "select count( $idFieldName ) as '$countColumn' from $tableName $whereClause" ;
 		$result = $this->query( $cmd, $parameters );
-		if ( isset( $result[ 0 ][ $countColumn ] ) ) {
+		if ( is_array( $result ) && count( $result ) > 0 && isset( $result[ 0 ][ $countColumn ] ) ) {
 			return $result[ 0 ][ $countColumn ];
 		}
 		return 0;
