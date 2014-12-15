@@ -4,7 +4,7 @@
  * Dynamic object creator
  *
  * @author	Thiago Delgado Pinto
- * @version 0.9
+ * @version 0.9.1
  */
 class ObjectCreator {
 
@@ -18,7 +18,7 @@ class ObjectCreator {
 	 */
 	static function fromArray(
 		array $array,
-		$className = 'ADummyClassToDoWhatheverYouWant'
+		$className = 'stdClass'
 		) {
 
 		function serializeValue( $value ) {
@@ -47,7 +47,6 @@ class ObjectCreator {
 			return ' = ' . serializeValue( $value );
 		}
 
-		//$className = 'ADummyClassToDoWhatheverYouWant';
 		$class = "class $className { \n";
 		foreach ( $array as $key => $value ) {
 			if ( is_numeric( $key ) ) {
@@ -58,7 +57,6 @@ class ObjectCreator {
 		}
 		$class .= "\n}";
 		
-		//echo $class;
 		eval( $class );
 		return new $className;
 	}
