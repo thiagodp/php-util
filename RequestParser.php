@@ -5,6 +5,7 @@ require_once 'Request.php';
 /**
  * Request parser
  *
+ * @version	0.2
  * @author	Thiago Delgado Pinto
  */
 class RequestParser {
@@ -17,6 +18,16 @@ class RequestParser {
 			self::uri(),
 			self::parameters()
 			);
+	}
+	
+	/** Return the server addreess */
+	static function serverAddress() {
+		return self::val( $_SERVER, 'SERVER_ADDR' );
+	}
+	
+	/** Return true if the server address is 127.0.0.1 */
+	static function isLocalServer() {
+		return '127.0.0.1' === self::serverAddress();
 	}
 	
 	/** Return request's URI. */

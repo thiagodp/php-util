@@ -17,29 +17,46 @@ require_once 'UploadedFile.php';
  * @see UploadedFile
  *
  * @author	Thiago Delgado Pinto
- * @version	0.2
+ * @version	1.0
  */
 class UploadUtil {
 
 	/**
-	 * Create an array of {@code UploadedFile}s  from an array of files got from $_FILES variable
-	 * with a given name.
+	 * Create an array of {@link UploadedFile}s from an array of files got from
+	 * the $_FILES variable with a given name.
 	 *
 	 * @param name	The key of the $_FILES variable with the array of uploaded files.
-	 * @return		An array of {@code UploadFile} objects.
+	 * @return		array of {@link UploadFile}.
 	 */
 	static function uploadedFiles( $name ) {
+	
+		// Check parameters
 		$attributes = array( 'name', 'type', 'size', 'tmp_name', 'error' );
 		foreach ( $attributes as $attr ) {
 			if ( ! isset( $_FILES[ $name ][ $attr ] ) ) {
 				return array();
 			}
 		}
+		
+		// Just one file
+		if ( is_string( $_FILES[ $name ][ 'name' ] ) ) {
+			$uf = new UploadedFile(
+				$_FILES[ $name ][ 'name' ],
+				$_FILES[ $name ][ 'type' ],
+				$_FILES[ $name ][ 'size' ],
+				$_FILES[ $name ][ 'tmp_name' ],
+				$_FILES[ $name ][ 'error' ]
+				);
+			return array( $uf );
+		}
+		
+		// More than one file
 		$names = $_FILES[ $name ][ 'name' ];
 		$types = $_FILES[ $name ][ 'type' ];
 		$sizes = $_FILES[ $name ][ 'size' ];
 		$tmpNames = $_FILES[ $name ][ 'tmp_name' ];
-		$errors = $_FILES[ $name ][ 'error' ];		
+		$errors = $_FILES[ $name ][ 'error' ];
+		
 		$files = array();
 		$count = count( $_FILES[ $name ][ 'name' ] );
 		for ( $i = 0; $i < $count; ++$i ) {

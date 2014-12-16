@@ -4,13 +4,20 @@
  * Dynamic object creator
  *
  * @author	Thiago Delgado Pinto
- * @version 0.9.1
+ * @version 0.9.2
  */
 class ObjectCreator {
 
 	/**
-	 * Create an object from an array. The object will have the array
-	 * keys as public attributes.
+	 * Create an object from an array. The object will use array's keys as
+	 * public attributes.
+	 *
+	 * WARNING: The generated object will replace sub arrays converting them
+	 *			to objects. If you do not want this behaviour, just cast an
+	 * 			array to an	object like this:
+     *
+	 *			$obj = (object) $yourArray;
+	 *
 	 *
 	 * @param array	the array map containing the keys and values.
 	 * @param 		the class name to create on demand (optional).
@@ -20,6 +27,19 @@ class ObjectCreator {
 		array $array,
 		$className = 'stdClass'
 		) {
+		$class = self::classDeclaration( $array, $className );
+		eval( $class );
+		return new $className;
+	}
+	
+	/**
+	 * Create a class declaration from the given array and class name.
+	 *
+	 * @param array	the array map containing the keys and values.
+	 * @param 		the class name.
+	 * @return		string.	 
+	 */
+	static function classDeclaration( array $array, $className ) {
 
 		function serializeValue( $value ) {
 			$type = gettype( $value );
@@ -57,8 +77,7 @@ class ObjectCreator {
 		}
 		$class .= "\n}";
 		
-		eval( $class );
-		return new $className;
+		return $class;
 	}
 }
 
