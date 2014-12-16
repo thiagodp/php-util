@@ -15,7 +15,7 @@
  * @see PDO
  * 
  * @author	Thiago Delgado Pinto
- * @version	0.2
+ * @version	0.3
  */
 class PDOWrapper {
 
@@ -61,13 +61,26 @@ class PDOWrapper {
 	 * @return				the next id value or 1 if there are no records.
 	 */
 	function generateId( $tableName, $idFieldName = 'id' ) { // throws
+		return 1 + $this->lastId( $tableName, $idFieldName );
+	}
+
+	/**
+	 * Return the last id for the given table or zero if there are no records.
+	 *
+	 * @param string $tableName		the name of the table.
+	 * @param string $idFieldName	the name of the id field.
+	 * @return int
+	 */
+	function lastId( $tableName, $idFieldName = 'id' ) { // throws
 		$maxColumn = 'M_A_X_';
 		$cmd = "select MAX( $idFieldName ) as '$maxColumn' from $tableName";
-		$result = $this->query( $cmd );		
-		if ( isset( $result[ 0 ][ $maxColumn ] ) ) {
-			return 1 + $result[ 0 ][ $maxColumn ];
+		$result = $this->query( $cmd );
+		if ( is_array( $result ) && count( $result ) > 0 && isset( $result[ 0 ][ $maxColumn ] ) ) {
+			return $result[ 0 ][ $maxColumn ];
+		} else if ( is_object( $result ) ) {
+			return $result->{ $maxColumn };
 		}
-		return 1;
+		return 0;
 	}
 	
 	/**
@@ -103,6 +116,8 @@ class PDOWrapper {
 		$result = $this->query( $cmd, $parameters );
 		if ( is_array( $result ) && count( $result ) > 0 && isset( $result[ 0 ][ $countColumn ] ) ) {
 			return $result[ 0 ][ $countColumn ];
+		} else if ( is_object( $result ) ) {
+			return $result->{ $countColumn };
 		}
 		return 0;
 	}
