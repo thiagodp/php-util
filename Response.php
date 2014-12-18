@@ -13,23 +13,26 @@
  * Default format for responses to the client. Good to be converted in JSON format.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.0 
+ * @version	1.1 
  */
 class Response {
 
 	private $success;	// Tells if everything is right.
 	private $message;	// Message in case of success or error.
 	private $data;		// Data to be sent in response.
+	private $extra;		// Any extra information (e.g. stack trace on error)
 
-	function __construct( $success = true, $message = '', $data = null ) {
+	function __construct( $success = true, $message = '', $data = null, $extra = null ) {
 		$this->success = $success;
 		$this->message = $message;
 		$this->data = $data;
+		$this->extra = $extra;
 	}
 	
 	function getSuccess() { return $this->success; }	
 	function getMessage() {	return $this->message; }	
 	function getData() { return $this->data; }	
+	function getExtra() { return $this->extra; }
 }
 
 ?>
