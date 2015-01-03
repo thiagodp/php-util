@@ -13,7 +13,7 @@
  * Array utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.1 
+ * @version	1.2
  */
 class ArrayUtil {
 
@@ -56,6 +56,22 @@ class ArrayUtil {
 			$array = array_values( $array );
 		}
 		return true;
+	}
+
+
+	/**
+	 * Replace the given keys in the target array.
+	 *
+	 * @param array $keyMap	The key map (usually string to string)
+	 * @param array $target	The target array, passed by reference.
+	 */
+	static function replaceKeys( array $keyMap, array &$target ) {
+		foreach ( $keyMap as $oldKey => $newKey ) {
+			if ( isset( $target[ $oldKey ] ) ) {
+				$target[ $newKey ] = $target[ $oldKey ];
+				unset( $target[ $oldKey ] );
+			}
+		}
 	}
 
 }
