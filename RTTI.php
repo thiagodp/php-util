@@ -13,7 +13,7 @@
  * Run time type information utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	2.0
+ * @version	2.1
  */
 class RTTI {
 
@@ -69,7 +69,7 @@ class RTTI {
 				$methodName = $setterPrefix . ( $useCamelCase ? ucfirst( $attributeName ) : $attributeName );
 				if ( $reflectionObject->hasMethod( $methodName ) ) {
 					$method = $reflectionObject->getMethod( $methodName );
-					if ( $method->isPublic() && isset( $map[ $attributeName ] ) ) {
+					if ( $method->isPublic() && array_key_exists( $attributeName, $map ) ) {
 						$method->invoke( $obj, $map[ $attributeName ] );
 					}
 				}
