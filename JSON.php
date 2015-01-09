@@ -15,9 +15,42 @@ require_once 'RTTI.php'; // Uses RTTI::getPrivateAttributes
  * JSON utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.2
+ * @version	1.3
  */
 class JSON {
+	
+	private static $conversions = array();
+	
+	/**
+	 *  Add a conversion for objects of a certain class.
+	 *  If the class name is already mapped, the function is overridden.
+	 *  
+	 *  @param [in] $className Class name.
+	 *  @param [in] $function  Function that receives a value and returns a value.
+	 *  
+	 *  @details Example:
+	 *  
+	 *  addConversion( 'DateTime', function( $value ) {
+	 *  	return $value->format( 'Y-m-d' );
+	 *  } );
+	 *  
+	 */
+	static function addConversion( $className, $function ) {
+		self::$conversions[ $className ] = $function;
+	}
+	
+	/** @return bool */
+	static function hasConversion( $className ) {
+		return array_key_exists( $className, self::$conversions );
+	}
+	
+	/**
+	 *  Remove a conversion for a certain class.
+	 *  @param [in] $className Class name.
+	 */
+	static function removeConversion( $className ) {
+		unset( self::$conversions[ $className ] );
+	}
 
 	/**
 	 * Encode a data to JSON format.
@@ -38,6 +71,13 @@ class JSON {
 			case 'boolean'	: return ( $data ) ? 'true' : 'false';
 			case 'NULL'		: return 'null';
 			case 'object'	:
+				$className = get_class( $data );
+				if ( array_key_exists( $className, self::$conversions )
+					&& is_callable( self::$conversions[ $className ] ) ) {
+					$function = self::$conversions[ $className ];
+					$convertedValue = call_user_func( $function, $data );
+					return self::encode( $convertedValue );
+				}
 				$data = RTTI::getPrivateAttributes( $data, $getterPrefixForObjectMethods );
 				// continue
 			case 'array'	:
@@ -59,8 +99,9 @@ class JSON {
 					return '{ ' . implode( ', ', $outputAssociative ) . ' }';
 				} else {
 					return '[ ' . implode( ', ', $outputIndexed ) . ' ]';				
-				}		
-			default			: return ''; // Not supported type
+				}
+				
+			default: return ''; // Not supported type
 		}
 	}
 	
