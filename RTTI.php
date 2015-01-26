@@ -101,7 +101,7 @@ class RTTI {
 			$newK = $k;
 			$pos = strpos( $k, $className );
 			if ( 1 === $pos ) { // Start of name?
-				$newK = substr( $k, strlen( $className ) + 1 );			
+				$newK = trim( substr( $k, strlen( $className ) + 1 ) );
 				unset( $ra[ $k ] );
 			}
 			
