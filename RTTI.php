@@ -13,7 +13,7 @@
  * Run time type information utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	2.1
+ * @version	2.2
  */
 class RTTI {
 
@@ -76,6 +76,40 @@ class RTTI {
 			}
 			$currentClass = $currentClass->getParentClass();
 		}
+	}
+	
+	
+	/**
+	 *  Recursively transform an object to an array.
+	 *  
+	 *  @param	object $obj	The object to be transformed.
+	 *  @return	array
+	 */
+	static function objectToArray( $obj ) {
+		$className = get_class( $obj );
+		$a = (array) $obj;
+		$ra = $a;
+		
+		foreach ( $a as $k => $v ) {
+			
+			$newV = $v;
+			$type = gettype( $v );
+			if ( 'object' === $type ) {
+				$newV = self::objectToArray( $v );
+			}
+			
+			$newK = $k;
+			$pos = strpos( $k, $className );
+			if ( 1 === $pos ) { // Start of name?
+				$newK = substr( $k, strlen( $className ) + 1 );			
+				unset( $ra[ $k ] );
+			}
+			
+			$ra[ $newK ] = $newV;
+			
+		}
+			
+		return $ra;
 	}
 	
 }
