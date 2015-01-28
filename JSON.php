@@ -15,7 +15,7 @@ require_once 'RTTI.php'; // Uses RTTI::getPrivateAttributes
  * JSON utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.4
+ * @version	1.5
  */
 class JSON {
 	
@@ -79,7 +79,7 @@ class JSON {
 					return self::encode( $convertedValue );
 				}
 				//$data = RTTI::getPrivateAttributes( $data, $getterPrefixForObjectMethods );
-				$data = RTTI::objectToArray( $data );
+				$data = RTTI::getAttributes( $data, RTTI::anyVisibility(), $getterPrefixForObjectMethods );
 				// continue
 				
 			case 'array'	:
