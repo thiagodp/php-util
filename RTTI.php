@@ -13,7 +13,7 @@
  * Run time type information utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	3.0
+ * @version	3.1
  */
 class RTTI {
 	
@@ -82,6 +82,7 @@ class RTTI {
 					}
 					
 				} else { // public
+					
 					try {
 						$attributes[ $attributeName ] = $obj->{ $attributeName };
 					} catch (Exception $e) {
@@ -90,6 +91,15 @@ class RTTI {
 				}
 				
 			}
+			
+			// No properties? -> try to retrieve only public properties
+			if ( count( $properties ) < 1 ) {
+				$properties = get_object_vars( $obj );
+				foreach ( $properties as $k => $v ) {
+					$attributes[ $k ] = $v;
+				}
+			}
+			
 			$currentClass = $currentClass->getParentClass();
 		}
 		return $attributes;		
@@ -153,7 +163,7 @@ class RTTI {
 					
 				} else { // public
 					try {
-						if ( array_key_exists( $attributeName, $map ) ) { 
+						if ( array_key_exists( $attributeName, $map ) ) {
 							$obj->{ $attributeName } = $map[ $attributeName ];
 						}
 					} catch (Exception $e) {
@@ -161,6 +171,20 @@ class RTTI {
 					}
 				}
 			}
+			
+			// No properties? -> try to retrieve only public properties
+			if ( count( $properties ) < 1 ) {
+				$properties = get_object_vars( $obj );
+				foreach ( $properties as $attributeName => $v ) {
+					if ( array_key_exists( $attributeName, $map ) ) { 
+						try {
+							$obj->{ $attributeName } = $map[ $attributeName ];
+						} catch (Exception $e) {
+							// Ignore
+						}
+					}
+				}
+			}			
 			
 			$currentClass = $currentClass->getParentClass();
 		}
