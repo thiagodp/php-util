@@ -15,7 +15,7 @@ require_once 'RTTI.php'; // Uses RTTI::getPrivateAttributes
  * JSON utilities.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.5
+ * @version	1.5.1
  */
 class JSON {
 	
@@ -62,15 +62,16 @@ class JSON {
 	 */
 	static function encode( $data, $getterPrefixForObjectMethods = 'get' ) {
 		$type = gettype( $data );
+		$isObject = false;
 		switch ( $type ) {		
 			case 'string'	: return '"' . self::correct( $data ) . '"';
-			case 'number'	: // continue
-			case 'integer'	: // continue
-			case 'float'	: // continue			
+			case 'number'	: ; // continue
+			case 'integer'	: ; // continue
+			case 'float'	: ; // continue			
 			case 'double'	: return $data;				
 			case 'boolean'	: return ( $data ) ? 'true' : 'false';
 			case 'NULL'		: return 'null';
-			case 'object'	:
+			case 'object'	: {
 				$className = get_class( $data );
 				if ( array_key_exists( $className, self::$conversions )
 					&& is_callable( self::$conversions[ $className ] ) ) {
@@ -80,29 +81,24 @@ class JSON {
 				}
 				//$data = RTTI::getPrivateAttributes( $data, $getterPrefixForObjectMethods );
 				$data = RTTI::getAttributes( $data, RTTI::anyVisibility(), $getterPrefixForObjectMethods );
+				$isObject = true;
 				// continue
-				
-			case 'array'	:
-				$indexCount = 0;
-				$outputIndexed = array();
-				$outputAssociative = array();
+			}
+			case 'array'	: {
+				$output = array();
 				foreach ( $data as $key => $value ) {
+					
 					$encodedValue = self::encode( $value, $getterPrefixForObjectMethods );
-					$encodedPairKeyValue = self::encode( $key, $getterPrefixForObjectMethods )
-						. ' : ' . $encodedValue;				
-					$outputIndexed[] = $encodedValue;
-					$outputAssociative[] = $encodedPairKeyValue;
-					// If the key is not numbered, nullify the counter
-					if ( $indexCount !== NULL && $indexCount++ !== $key ) {
-						$indexCount = NULL;
+					
+					if ( is_numeric( $key ) ) {
+						$output []= $encodedValue;
+					} else {
+						$encodedKey = self::encode( $key, $getterPrefixForObjectMethods );
+						$output []= $encodedKey . ' : ' . $encodedValue;
 					}
 				}
-				if ( NULL == $indexCount ) { // NOT numbered key 
-					return '{ ' . implode( ', ', $outputAssociative ) . ' }';
-				} else {
-					return '[ ' . implode( ', ', $outputIndexed ) . ' ]';				
-				}
-				
+				return $isObject ? '{ ' . implode( ', ', $output ) . ' }' : '[ ' . implode( ', ', $output ) . ' ]';
+			}
 			default: return ''; // Not supported type
 		}
 	}
