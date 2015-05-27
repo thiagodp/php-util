@@ -61,6 +61,15 @@ class HttpSender {
 	function patch( $url, array $content, $contentType='application/x-www-form-urlencoded', $encodeURL = false ) {		
 		return $this->send( 'PATCH', $url, $content, $contentType, $encodeURL );
 	}
+	
+	/**
+	 * Send a HTTP HEAD request. This a convenience method for #send().
+	 *
+	 * @see #send().
+	 */	
+	function head( $url, array $content, $contentType='application/x-www-form-urlencoded', $encodeURL = false ) {		
+		return $this->send( 'HEAD', $url, $content, $contentType, $encodeURL );
+	}	
 
 	/**
 	 * Send a HTTP OPTIONS request. This a convenience method for #send().
