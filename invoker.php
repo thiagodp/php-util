@@ -87,7 +87,7 @@
  * </p>
  *
  * @author	Thiago Delgado Pinto
- * @version	1.2
+ * @version	1.2.1
  *
  * @see		{@link JSON}, {@link Response}
  *
@@ -95,7 +95,7 @@
 require_once( 'autoload.php' );
 
 mb_internal_encoding( 'UTF-8' );
-header( 'Content-type: text/json; charset=UTF-8' );
+header( 'Content-type: application/json; charset=UTF-8' );
 
 define( 'CLASS_PARAMETER', '_c' );
 define( 'METHOD_PARAMETER', '_m' );

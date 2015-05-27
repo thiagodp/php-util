@@ -10,9 +10,10 @@
  */
  
 /**
- * A simple, CURL-less, http sender.
+ * A simple CURL-less http sender.
  *
  * @author	Thiago Delgado Pinto
+ * @version	0.9
  */
 class HttpSender {
 
@@ -25,10 +26,10 @@ class HttpSender {
 	 * @encodeURL		true for encoding the supplied url, false otherwise. OPTIONAL, default false.
 	 * @return			a string with the returning content or false in case of failure.
 	 */
-	static function post( $url, array $content, $contentType='application/x-www-form-urlencoded',
+	function post( $url, array $content, $contentType='application/x-www-form-urlencoded',
 		$encodeURL = false
 		) {
-		return self::send( 'POST', $url, $content, $contentType, $encodeURL );
+		return $this->send( 'POST', $url, $content, $contentType, $encodeURL );
 	}
 	
 	/**
@@ -40,10 +41,10 @@ class HttpSender {
 	 * @encodeURL		true for encoding the supplied url, false otherwise. OPTIONAL, default false.
 	 * @return			a string with the returning content or false in case of failure.
 	 */
-	static function get( $url, array $content, $contentType='application/x-www-form-urlencoded',
+	function get( $url, array $content, $contentType='application/x-www-form-urlencoded',
 		$encodeURL = false
 		) {		
-		return self::send( 'GET', $url, $content, $contentType, $encodeURL );
+		return $this->send( 'GET', $url, $content, $contentType, $encodeURL );
 	}	
 	
 	/**
@@ -55,10 +56,10 @@ class HttpSender {
 	 * @encodeURL		true for encoding the supplied url, false otherwise.
 	 * @return			a string with the returning content or false in case of failure.
 	 */
-	private static function send( $method, $url, array $content, $contentType, $encodeURL ) {
+	function send( $method, $url, array $content, $contentType, $encodeURL ) {
 		$options = array(
 			'http' => array( // also works for https
-				'header'  => "Content-type: $contentType\r\n",
+				'header'  => 'Content-type: '. $contentType,
 				'method'  => $method,
 				'content' => http_build_query( $content )
 			),
@@ -66,6 +67,7 @@ class HttpSender {
 		$context = stream_context_create( $options );
 		$targetURL = ( $encodeURL ) ? urlencode( $url ) : $url;
 		return file_get_contents( $targetURL , false, $context );
-	}	
+	}
+	
 }
 ?>
