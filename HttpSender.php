@@ -13,7 +13,7 @@
  * A simple CURL-less http sender.
  *
  * @author	Thiago Delgado Pinto
- * @version	1.0
+ * @version	1.1
  */
 class HttpSender {
 
@@ -81,12 +81,16 @@ class HttpSender {
 	}
 	
 	/**
-	 * Send a HTTP request.
+	 * Send a simple HTTP request.
 	 *
-	 * @param url		the target url
-	 * @param content	the array with the content to send. Example: array( 'name' => 'Bob' )
-	 * @contentType		the content type
-	 * @encodeURL		true for encoding the supplied url, false otherwise.
+	 * @param string	method		the HTTP method to use.
+	 * @param string	url			the url.
+	 * @param array		content		the array with the content to send.
+	 *								Example: array( '{ "name": "Bob" }' ).
+	 * @param string	contentType	the content type.
+	 *								Example: 'application/json'.
+	 * @param bool		encodeURL	true for encoding the supplied url, false otherwise.
+	 *
 	 * @return			a string with the returning content or false in case of failure.
 	 */
 	function send( $method, $url, array $content, $contentType, $encodeURL ) {
@@ -96,7 +100,20 @@ class HttpSender {
 				'method'  => $method,
 				'content' => http_build_query( $content )
 			),
-		);
+		);		
+		return $this->request( $options, $url, $encodeURL );
+	}
+	
+	/**
+	 * Send a request to a resource.
+	 *
+	 * @param array 	options		specify the header for the request.
+	 * @param string	url			the url.
+	 * @param bool		encodeURL	true for encoding the supplied url, false otherwise.
+	 *
+	 * @return			a string with the returning content or false in case of failure.
+	 */
+	function request( array $options, $url, $encodeURL ) {
 		$context = stream_context_create( $options );
 		$targetURL = $encodeURL ? urlencode( $url ) : $url;
 		return file_get_contents( $targetURL , false, $context );
