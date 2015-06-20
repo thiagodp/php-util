@@ -9,7 +9,7 @@ require_once 'datatables/DataTablesResponse.php';
  *
  * @author	Thiago Delgado Pinto
  *
- * @version	1.0
+ * @version	1.1
  *
  *
  * How to use it:
@@ -113,7 +113,7 @@ class JsonInvoker {
 
 		if ( ! class_exists( $className, true ) ) {
 			$msg = "Class '${className}' not found.";
-			return self::jsonHttpResponseForContent( true, $msg, null, $returnFormat );
+			return self::jsonContent( true, $msg, null, $returnFormat );
 		}
 		// Calls the defined method, get its result and send to the client
 		try {
@@ -123,16 +123,16 @@ class JsonInvoker {
 			// Verifies if the method exists in the class instance
 			if ( ! method_exists( $obj, $methodName ) ) {
 				$msg = "Method '${methodName}' not found in class '${className}'.";
-				return self::jsonHttpResponseForContent( true, $msg, null, $returnFormat );
+				return self::jsonContent( true, $msg, null, $returnFormat );
 			}
 
 			$data = call_user_func_array( array( $obj, $methodName ), $methodArgs );
-			return self::jsonHttpResponseForContent( true, null, $data, $returnFormat );
+			return self::jsonContent( true, null, $data, $returnFormat );
 			
 		} catch (Exception $e) {
 			$extra = self::$debugMode === true ? $e->getTraceAsString() : null;
 			// Send the exception class as the "data" and, if in debug mode, the trace as "extra"
-			return self::jsonHttpResponseForContent( false, $e->getMessage(), get_class( $e ), $returnFormat, $extra );
+			return self::jsonContent( false, $e->getMessage(), get_class( $e ), $returnFormat, $extra );
 		}
 	}
 	
@@ -159,8 +159,8 @@ class JsonInvoker {
 	 *  
 	 *  @return string
 	 */
-	static function jsonHttpResponseForContent( $success, $msg, $data, $returnFormat, $extra = null ) {
-		return self::jsonHttpResponse( self::contentFor( $success, $msg, $data, $returnFormat, $extra ) );
+	static function jsonContent( $success, $msg, $data, $returnFormat, $extra = null ) {
+		return JSON::encode( self::contentFor( $success, $msg, $data, $returnFormat, $extra ) );
 	}
 	
 	/**
@@ -179,22 +179,7 @@ class JsonInvoker {
 			$content = new DataTablesResponse( $count, $count, $data, $draw, $message );
 		}
 		return $content;
-	}	
-
-	/**
-	 *  Returns a JSON HTTP response.
-	 *  
-	 *  @return string
-	 */
-	static function jsonHttpResponse( $content ) {
-		header( 'Content-Type: application/json; charset: UTF-8' ); // Always JSON
-		if ( self::getCompress() ) {
-			header( 'Content-Encoding: gzip' );
-			return gzencode( JSON::encode( $content ), 6 );
-		}
-		return JSON::encode( $content );
 	}
-
 }
 
 ?>
