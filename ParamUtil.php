@@ -4,6 +4,7 @@
  * Parameter utilities.
  *
  * @author	Thiago Delgado Pinto
+ * @version	1.1
  */
 class ParamUtil {
 
@@ -44,7 +45,7 @@ class ParamUtil {
 	 *					for	most cases, since the accents are kept.
 	 * @return			the encoded value or null if the key is not found.
 	 */
-	private static function value( array $array, $key, $useTrim, $encodeAll ) {
+	public static function value( array $array, $key, $useTrim, $encodeAll ) {
 		if ( ! isset( $array[ $key ] ) ) {
 			return null;
 		}
