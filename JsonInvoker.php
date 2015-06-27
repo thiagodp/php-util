@@ -127,7 +127,8 @@ class JsonInvoker {
 			}
 
 			$data = call_user_func_array( array( $obj, $methodName ), $methodArgs );
-			return self::jsonContent( true, null, $data, $returnFormat );
+			$extra = is_array( $data ) ? count( $data ) : null;
+			return self::jsonContent( true, null, $data, $returnFormat, $extra );
 			
 		} catch (Exception $e) {
 			$extra = self::$debugMode === true ? $e->getTraceAsString() : null;
