@@ -9,7 +9,7 @@ require_once 'datatables/DataTablesResponse.php';
  *
  * @author	Thiago Delgado Pinto
  *
- * @version	1.1
+ * @version	1.2
  *
  *
  * How to use it:
