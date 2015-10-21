@@ -12,16 +12,16 @@
 /**
  * A simple but useful wrapper for PDO.
  *
- * @see PDO
+ * @see \PDO
  * 
  * @author	Thiago Delgado Pinto
- * @version	0.3
+ * @version	0.3.1
  */
 class PDOWrapper {
 
 	private $pdo;
 	
-	function __construct( PDO $pdo ) {
+	function __construct( \PDO $pdo ) {
 		$this->pdo = $pdo;
 	}
 	
@@ -36,10 +36,10 @@ class PDOWrapper {
 	 */
 	static function create( $dsn, $username = '', $password = '', $options = array() ) { // throw
 		// Cache the connection and reuse it
-		if ( ! isset( $options[ PDO::ATTR_PERSISTENT ] ) ) {
-			$options[ PDO::ATTR_PERSISTENT ] = true;
+		if ( ! isset( $options[ \PDO::ATTR_PERSISTENT ] ) ) {
+			$options[ \PDO::ATTR_PERSISTENT ] = true;
 		}
-		return new PDO( $dsn, $username, $password, $options );
+		return new \PDO( $dsn, $username, $password, $options );
 	}
 	
 	/**
@@ -49,7 +49,7 @@ class PDOWrapper {
 	 */
 	static function createInModeException( $dsn, $username = '', $password = '', $options = array() ) { // throw
 		$pdo = self::create( $dsn, $username, $password, $options );
-		$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+		$pdo->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION );
 		return $pdo;
 	}
 	
@@ -73,12 +73,12 @@ class PDOWrapper {
 	 */
 	function lastId( $tableName, $idFieldName = 'id' ) { // throws
 		$maxColumn = 'M_A_X_';
-		$cmd = "select MAX( $idFieldName ) as '$maxColumn' from $tableName";
+		$cmd = "SELECT MAX( $idFieldName ) AS '$maxColumn' FROM $tableName";
 		$result = $this->query( $cmd );
 		if ( is_array( $result ) && count( $result ) > 0 && isset( $result[ 0 ][ $maxColumn ] ) ) {
-			return $result[ 0 ][ $maxColumn ];
+			return (int) $result[ 0 ][ $maxColumn ];
 		} else if ( is_object( $result ) ) {
-			return $result->{ $maxColumn };
+			return (int) $result->{ $maxColumn };
 		}
 		return 0;
 	}
@@ -92,7 +92,7 @@ class PDOWrapper {
 	 * @return				the number of deleted records.
 	 */
 	function deleteWithId( $id, $tableName, $idFieldName = 'id' ) { // throws
-		$cmd = "delete from $tableName where $idFieldName = ?";
+		$cmd = "DELETE FROM $tableName WHERE $idFieldName = ?";
 		return $this->run( $cmd, array( $id ) );
 	}
 	
@@ -112,12 +112,12 @@ class PDOWrapper {
 		array $parameters = array()
 		) {	// throws
 		$countColumn = 'C_O_U_N_T_';
-		$cmd = "select count( $idFieldName ) as '$countColumn' from $tableName $whereClause" ;
+		$cmd = "SELECT COUNT( $idFieldName ) AS '$countColumn' FROM $tableName $whereClause" ;
 		$result = $this->query( $cmd, $parameters );
 		if ( is_array( $result ) && count( $result ) > 0 && isset( $result[ 0 ][ $countColumn ] ) ) {
-			return $result[ 0 ][ $countColumn ];
+			return (int) $result[ 0 ][ $countColumn ];
 		} else if ( is_object( $result ) ) {
-			return $result->{ $countColumn };
+			return (int) $result->{ $countColumn };
 		}
 		return 0;
 	}
@@ -144,10 +144,11 @@ class PDOWrapper {
 	 * @param limit		the maximum number of records to retrieve.
 	 * @param offset	the number of records to ignore (or "jump").
 	 * @return			a string with the clauses.
+	 * @throws			InvalidArgumentException
 	 */
 	function makeLimitOffset( $limit = 0, $offset = 0 ) { // throw
-		if ( ! is_integer( $limit ) ) throw new InvalidArgumentException( 'Limit is not a number.' );
-		if ( ! is_integer( $offset ) ) throw new InvalidArgumentException( 'Offset is not a number.' );
+		if ( ! is_integer( $limit ) ) throw new \InvalidArgumentException( 'Limit is not a number.' );
+		if ( ! is_integer( $offset ) ) throw new \InvalidArgumentException( 'Offset is not a number.' );
 		$sql = '';
 		$drv = $this->driverName();
 		// Limit clause
@@ -214,10 +215,10 @@ class PDOWrapper {
 	 * @param className	the objects' class name (optional).
 	 */
 	function fetchObjectsFromStatement( PDOStatement $ps, $className = '' ) {
-		$fetchMode = PDO::FETCH_OBJ;
+		$fetchMode = \PDO::FETCH_OBJ;
 		if ( $className != '' ) {
-			$ps->setFetchMode( PDO::FETCH_CLASS, $className );
-			$fetchMode = PDO::FETCH_CLASS;
+			$ps->setFetchMode( \PDO::FETCH_CLASS, $className );
+			$fetchMode = \PDO::FETCH_CLASS;
 		}
 		$objects = array();
 		while ( ( $obj = $ps->fetch( $fetchMode ) ) !== false ) {
