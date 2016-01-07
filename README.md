@@ -3,7 +3,19 @@ php-util
 
 Some useful PHP libraries.
 
-This project works with <a href="https://getcomposer.org/" >Composer</a> and had been published at <a href="https://packagist.org/" >Packagist</a>.
+## Warning
+
+THIS PROJECT IS BEING SEPARATED INTO SUBPROJECTS AND SHALL BECOME DEPRECATED IN A NEAR FUTURE.
+
+These subprojects are:
+- [phputil/JSON](https://github.com/thiagodp/json)
+- [phputil/PDOWrapper](https://github.com/thiagodp/pdowrapper)
+- [phputil/RTTI](https://github.com/thiagodp/rtti)
+- [phputil/Session](https://github.com/thiagodp/session)
+
+We also recommend you to take a look at [other interesting repositories](https://github.com/thiagodp?tab=repositories).
+
+## Installation
 
 For installing using <a href="https://getcomposer.org/" >Composer</a>:
 
