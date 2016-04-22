@@ -11,7 +11,8 @@ These subprojects are:
 - [phputil/JSON](https://github.com/thiagodp/json)
 - [phputil/PDOWrapper](https://github.com/thiagodp/pdowrapper)
 - [phputil/RTTI](https://github.com/thiagodp/rtti)
-- [phputil/Session](https://github.com/thiagodp/session)
+- [phputil/session](https://github.com/thiagodp/session)
+- [phputil/datatables](https://github.com/thiagodp/datatables)
 
 We also recommend you to take a look at [other interesting repositories](https://github.com/thiagodp?tab=repositories).
 
