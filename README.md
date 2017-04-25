@@ -14,11 +14,13 @@ Some useful PHP libraries.
 - [phputil/session](https://github.com/thiagodp/session)
 - [phputil/datatables](https://github.com/thiagodp/datatables)
 
-We also recommend you to take a look at [other interesting repositories](https://github.com/thiagodp?tab=repositories).
+and [new ones were created](https://github.com/search?q=topic%3Aphputil&type=Repositories).
+
+We also recommend you to take a look at [these repositories](https://github.com/thiagodp?tab=repositories).
 
 ## Installation
 
-Easy installation with [Composer](https://getcomposer.org/).
+Easy installation with [Composer](https://getcomposer.org/):
 ```
 composer require thiagodp/php-util
 ```
